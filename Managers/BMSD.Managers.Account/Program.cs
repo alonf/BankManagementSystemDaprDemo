@@ -1,16 +1,11 @@
 namespace BMSD.Managers.Account
 {
     using AutoMapper;
-    using BMSD.Managers.Account.Contracts.Responses;
+    using Contracts.Responses;
     using Dapr.Client;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.WebUtilities;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using System.Net.Http;
-    using System.Reflection.Metadata.Ecma335;
     using System.Text.Json;
-    using static Google.Rpc.Context.AttributeContext.Types;
 
     public class Program
     {
@@ -56,7 +51,7 @@ namespace BMSD.Managers.Account
 
                     if (data == null)
                     {
-                        return Results.Problem("Faild to read the request body");
+                        return Results.Problem("Fail to read the request body");
                     }
                     Validator.ValidateObject(data, new ValidationContext(data, null, null));
 
@@ -71,7 +66,7 @@ namespace BMSD.Managers.Account
                     var messagePayload = JsonSerializer.Serialize(customerRegistrationInfoSubmit);
 
                     //push the customer registration request
-                    await daprClient.InvokeMethodAsync<Contracts.Submits.CustomerRegistrationInfo>("useraccessor", "RegisterCustomer", customerRegistrationInfoSubmit);
+                    await daprClient.InvokeBindingAsync("customerregistrationqueue", "create", customerRegistrationInfoSubmit);
                     logger.LogInformation($"RegisterCustomer request added: {messagePayload}");
 
                     return Results.Ok("Register customer request received");
@@ -89,7 +84,8 @@ namespace BMSD.Managers.Account
             });
 
 
-            app.MapGet("/GetAccountId", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            app.MapGet("/GetAccountId",
+                async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger GetAccountId");
                 try
@@ -101,7 +97,9 @@ namespace BMSD.Managers.Account
                         return Results.Problem("Expecting the account owner email address");
                     }
 
-                    var accountId = await daprClient.InvokeMethodAsync<string, AccountIdInfo>("useraccessor", "GetAccountId", $"email={email}");
+                    var accountId =
+                        await daprClient.InvokeMethodAsync<string, AccountIdInfo>("useraccessor", "GetAccountId",
+                            $"email={email}");
 
                     if (accountId == null)
                     {
@@ -206,7 +204,7 @@ namespace BMSD.Managers.Account
                     var accountTransactionSubmit = mapper.Map<Contracts.Submits.AccountTransactionSubmit>(data);
 
                     //push the deposit request
-                    await daprClient.InvokeMethodAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "Deposit", accountTransactionSubmit);
+                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "create", accountTransactionSubmit);
                     logger.LogInformation($"Deposit request added");
 
                     return Results.Ok("Deposit request received");
@@ -259,7 +257,7 @@ namespace BMSD.Managers.Account
                     var accountTransactionSubmit = mapper.Map<Contracts.Submits.AccountTransactionSubmit>(data);
 
                     //push the deposit request
-                    await daprClient.InvokeMethodAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "Withdraw", accountTransactionSubmit);
+                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "create", accountTransactionSubmit);
                     logger.LogInformation($"Deposit request added");
 
                     return Results.Ok("Withdraw request received");

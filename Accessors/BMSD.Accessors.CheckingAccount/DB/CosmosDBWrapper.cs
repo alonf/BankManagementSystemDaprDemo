@@ -1,18 +1,8 @@
-﻿using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using BMSD.Accessors.CheckingAccount.DB;
-using Microsoft.Azure.Cosmos;
-
+﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace BMSD.Accessors.CheckingAccount.DB
 {
-
     public class CosmosDBWrapper : ICosmosDBWrapper
     {
         private readonly CosmosClient _cosmosClient;
@@ -32,18 +22,12 @@ namespace BMSD.Accessors.CheckingAccount.DB
         public async Task<AccountInfo> GetAccountInfoAsync(string accountId)
         {
             await InitDBIfNotExistsAsync();
-
-            //find the account info document
-            Uri accountInfoCollectionUri = UriFactory.CreateDocumentCollectionUri(_databaseName, AccountInfoName);
-            var accountInfoQuery = _cosmosClient
-                .CreateDocumentQuery<AccountInfo>(accountInfoCollectionUri,
-                    new FeedOptions { EnableCrossPartitionQuery = true }).Where(r => r.Id == accountId)
-                .AsDocumentQuery();
-            var accountInfo = (await accountInfoQuery.ExecuteNextAsync<AccountInfo>()).FirstOrDefault();
-
-            
+            var container = _cosmosClient.GetContainer(_databaseName, AccountInfoName);
+            var accountInfo = container.GetItemLinqQueryable<AccountInfo>(true)
+                .Where(a => a.Id == accountId).AsEnumerable().FirstOrDefault();
+               
             if (accountInfo != null)
-                return accountInfo;
+                return accountInfo!;
 
             //else, first record for the account
 
@@ -57,12 +41,14 @@ namespace BMSD.Accessors.CheckingAccount.DB
             try
             {
                 //in a case of race condition, only a single document is created (id)
-                var response = await _cosmosClient.CreateDocumentAsync(accountInfoCollectionUri, firstRecord);
+
+                //Create a new AccountInfo document 
+                var response = await container.CreateItemAsync(firstRecord);
 
                 _logger.LogInformation(
                     $"GetAccountInfoAsync: create first account, result status: {response.StatusCode} ");
             }
-            catch (DocumentClientException ex)
+            catch (CosmosException ex)
             {
                 if (ex.StatusCode != System.Net.HttpStatusCode.Conflict)
                 {
@@ -77,11 +63,9 @@ namespace BMSD.Accessors.CheckingAccount.DB
                 }
             }
 
-            accountInfoQuery = _cosmosClient
-                .CreateDocumentQuery<AccountInfo>(accountInfoCollectionUri,
-                    new FeedOptions { EnableCrossPartitionQuery = true }).Where(r => r.Id == accountId)
-                .AsDocumentQuery();
-            accountInfo = (await accountInfoQuery.ExecuteNextAsync<AccountInfo>()).FirstOrDefault();
+            accountInfo = container.GetItemLinqQueryable<AccountInfo>(true)
+                 .Where(a => a.Id == accountId).AsEnumerable().FirstOrDefault();
+
 
             if (accountInfo != null) 
                 return accountInfo;
@@ -105,10 +89,11 @@ namespace BMSD.Accessors.CheckingAccount.DB
 
                 await InitDBIfNotExistsAsync();
 
-                Uri accountTransactionCollectionUri = UriFactory.CreateDocumentCollectionUri(_databaseName, "AccountTransaction");
+                var container = _cosmosClient.GetContainer(_databaseName, AccountTransactionName);
 
                 //create or update the record (if this is a retry operation)
-                var response = await _cosmosClient.UpsertDocumentAsync(accountTransactionCollectionUri, transactionRecord);
+                var response = await container.UpsertItemAsync(transactionRecord);
+
                 _logger.LogInformation($"UpdateBalanceAsync: insert transaction to collection, result status: {response.StatusCode} ");
 
                 //find the account info document
@@ -123,11 +108,16 @@ namespace BMSD.Accessors.CheckingAccount.DB
                 accountInfo.AccountTransactions.Add(transactionRecord.Id);
                 accountInfo.AccountBalance += transactionRecord.TransactionAmount;
 
-                var ac = new AccessCondition { Condition = accountInfo.ETag, Type = AccessConditionType.IfMatch };
+                //create an access condition based on etag
+                var itemRequestOptions = new ItemRequestOptions()
+                {
+                    IfMatchEtag = accountInfo.ETag
+                };
 
-                //throws exception on concurrency conflicts => retry
-                await _cosmosClient.ReplaceDocumentAsync(accountInfo.Self, accountInfo,
-                    new RequestOptions { AccessCondition = ac });
+                //replace the account info document
+                var replaceItemResponse = await container.ReplaceItemAsync(accountInfo, accountInfo.Id, null, itemRequestOptions);
+
+                _logger.LogInformation($"UpdateBalanceAsync: update account info, result status: {replaceItemResponse.StatusCode} ");
             }
             catch (Exception ex)
             {
@@ -143,40 +133,24 @@ namespace BMSD.Accessors.CheckingAccount.DB
             if (_dbHasAlreadyInitiated)
                 return;
 
-            var resourceResponse = await _cosmosClient.CreateDatabaseIfNotExistsAsync(new Database { Id = _databaseName });
-            _logger.LogInformation($"InitDBIfNotExistsAsync: CreateDatabaseIfNotExistsAsync status code:{resourceResponse.StatusCode}");
+            //create the cosmos db database if not exist
+            var response = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
+            _logger.LogInformation($"InitDBIfNotExistsAsync: CreateDatabaseIfNotExistsAsync status code:{response.StatusCode}");
+
+            var database = _cosmosClient.GetDatabase(_databaseName);
+
+            //create the account transaction collection if not exist
+            var accountTransactionContainerResponse = database.CreateContainerIfNotExistsAsync(AccountTransactionName, "/requestId");
+            _logger.LogInformation($"InitDBIfNotExistsAsync:  create {AccountTransactionName} if not exist status code:{accountTransactionContainerResponse.Status}");
+
+            //create the account info collection if not exist
+             var accountInfoContainerResponse = await database.CreateContainerIfNotExistsAsync(AccountInfoName, "/overdraftLimit");
+            _logger.LogInformation($"InitDBIfNotExistsAsync: create {AccountInfoName} if not exist status code:{accountInfoContainerResponse.StatusCode}");
             
-            Uri databaseUri = UriFactory.CreateDatabaseUri(_databaseName);
-            var documentCollection = new DocumentCollection
-            {
-                Id = AccountTransactionName,
-                PartitionKey = new PartitionKeyDefinition
-                {
-                    Paths = new Collection<string> { "/requestId" }
-                }
-            };
-
-            //create collection if not exist
-            var documentResourceResponse = await _cosmosClient.CreateDocumentCollectionIfNotExistsAsync(databaseUri, documentCollection);
-            _logger.LogInformation($"InitDBIfNotExistsAsync: CreateDocumentCollectionIfNotExistsAsync for {AccountTransactionName} returned status code:{documentResourceResponse.StatusCode}");
-
-            documentCollection = new DocumentCollection
-            {
-                Id = AccountInfoName,
-                PartitionKey = new PartitionKeyDefinition
-                {
-                    Paths = new Collection<string> { "/overdraftLimit" }
-                }
-            };
-
-            //create collection if not exist
-            documentResourceResponse = await _cosmosClient.CreateDocumentCollectionIfNotExistsAsync(databaseUri, documentCollection);
-            _logger.LogInformation($"InitDBIfNotExistsAsync: CreateDocumentCollectionIfNotExistsAsync for {AccountInfoName} returned status code:{documentResourceResponse.StatusCode}");
-
             _dbHasAlreadyInitiated = true;
         }
 
-        public async Task<IList<AccountTransactionRecord>> GetAccountTransactionHistoryAsync(string accountId, int numberOfTransactions)
+        public async Task<IList<AccountTransactionRecord>?> GetAccountTransactionHistoryAsync(string accountId, int numberOfTransactions)
         {
             try
             {
@@ -191,18 +165,16 @@ namespace BMSD.Accessors.CheckingAccount.DB
 
                 var transactionIds = accountInfo.AccountTransactions.Skip(Math.Max(accountInfo.AccountTransactions.Count - numberOfTransactions, 0));
 
-                Uri accountTransactionsCollectionUri = UriFactory.CreateDocumentCollectionUri(_databaseName, AccountTransactionName);
-
-                var transactionQuery = _cosmosClient
-                    .CreateDocumentQuery<AccountTransactionRecord>(accountTransactionsCollectionUri,
-                        new FeedOptions { EnableCrossPartitionQuery = true }).Where(r => transactionIds.Contains(r.Id)).AsDocumentQuery();
+                var container = _cosmosClient.GetContainer(_databaseName, AccountTransactionName);
+                var transactionQuery = container.GetItemLinqQueryable<AccountTransactionRecord>()
+                    .Where(r => transactionIds.Contains(r.AccountId)).ToFeedIterator();
 
                 var accountTransactions = new List<AccountTransactionRecord>();
                 double charge = 0.0;
                 do
                 {
-                    var result = await transactionQuery.ExecuteNextAsync<AccountTransactionRecord>();
-                    accountTransactions.AddRange(result.ToArray());
+                    var result = await transactionQuery.ReadNextAsync();
+                    accountTransactions.AddRange(result);
                     charge += result.RequestCharge;
                 } while (transactionQuery.HasMoreResults);
 
@@ -246,11 +218,14 @@ namespace BMSD.Accessors.CheckingAccount.DB
 
                 accountInfo.OverdraftLimit = limit;
 
-                var ac = new AccessCondition { Condition = accountInfo.ETag, Type = AccessConditionType.IfMatch };
+                //create an access condition based on etag
+                var itemRequestOptions = new ItemRequestOptions()
+                {
+                    IfMatchEtag = accountInfo.ETag
+                };
 
-                //throws exception on concurrency conflicts => retry
-                await _cosmosClient.ReplaceDocumentAsync(accountInfo.Self, accountInfo,
-                    new RequestOptions { AccessCondition = ac });
+                var container = _cosmosClient.GetContainer(_databaseName, AccountInfoName);
+                var replaceItemResponse = await container.ReplaceItemAsync(accountInfo, accountInfo.Id, null, itemRequestOptions);
             }
             catch (Exception ex)
             {

@@ -204,7 +204,7 @@ namespace BMSD.Managers.Account
                     var accountTransactionSubmit = mapper.Map<Contracts.Submits.AccountTransactionSubmit>(data);
 
                     //push the deposit request
-                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "create", accountTransactionSubmit);
+                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("accounttransactionqueue", "create", accountTransactionSubmit);
                     logger.LogInformation($"Deposit request added");
 
                     return Results.Ok("Deposit request received");
@@ -257,7 +257,7 @@ namespace BMSD.Managers.Account
                     var accountTransactionSubmit = mapper.Map<Contracts.Submits.AccountTransactionSubmit>(data);
 
                     //push the deposit request
-                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("checkingaccountaccessor", "create", accountTransactionSubmit);
+                    await daprClient.InvokeBindingAsync<Contracts.Submits.AccountTransactionSubmit>("accounttransactionqueue", "create", accountTransactionSubmit);
                     logger.LogInformation($"Deposit request added");
 
                     return Results.Ok("Withdraw request received");

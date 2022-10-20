@@ -14,8 +14,5 @@ namespace BMSD.Accessors.CheckingAccount.DB
         public List<string> AccountTransactions { get; set; } = new List<string>();
         [JsonPropertyName("_etag")]
         public string? ETag { get; set; }
-        [JsonPropertyName("_self")]
-        public string? Self { get; set; }
-
     }
 }

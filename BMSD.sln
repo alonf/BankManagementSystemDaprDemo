@@ -19,7 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Account", "Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Notification", "Managers\BMSD.Managers.Notification\BMSD.Managers.Notification.csproj", "{076D94A9-D7C2-4AC7-839F-B60509AD72A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSD.Accessors.CheckingAccount", "Accessors\BMSD.Accessors.CheckingAccount\BMSD.Accessors.CheckingAccount.csproj", "{80D66434-10F3-418E-A5CF-95FF22286DFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Accessors.CheckingAccount", "Accessors\BMSD.Accessors.CheckingAccount\BMSD.Accessors.CheckingAccount.csproj", "{80D66434-10F3-418E-A5CF-95FF22286DFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS.Accessors.UserInfo", "Accessors\BMS.Accessors.UserInfo\BMS.Accessors.UserInfo.csproj", "{F6C4BB2D-6929-42E1-BC52-C43905B5894C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS.Engines.LiabilityValidator", "Engines\BMS.Engines.LiabilityValidator\BMS.Engines.LiabilityValidator.csproj", "{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Tests.IntegrationTests", "Tests\BMS.Tests.IntegrationTests\BMSD.Tests.IntegrationTests.csproj", "{3E884DAF-D5F9-408C-89B6-8C78688B2869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{80D66434-10F3-418E-A5CF-95FF22286DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D66434-10F3-418E-A5CF-95FF22286DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80D66434-10F3-418E-A5CF-95FF22286DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6C4BB2D-6929-42E1-BC52-C43905B5894C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6C4BB2D-6929-42E1-BC52-C43905B5894C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6C4BB2D-6929-42E1-BC52-C43905B5894C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6C4BB2D-6929-42E1-BC52-C43905B5894C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +66,9 @@ Global
 		{408EA9D2-5983-4147-87B0-EA37B1E4976E} = {D5D627A3-5E95-4C46-B810-3A6FD54C803A}
 		{076D94A9-D7C2-4AC7-839F-B60509AD72A0} = {D5D627A3-5E95-4C46-B810-3A6FD54C803A}
 		{80D66434-10F3-418E-A5CF-95FF22286DFA} = {2944A7B2-0CDD-4D70-8956-E08978E0D4CB}
+		{F6C4BB2D-6929-42E1-BC52-C43905B5894C} = {2944A7B2-0CDD-4D70-8956-E08978E0D4CB}
+		{F9045590-7D38-4944-BD1C-93B8E4B7D2F0} = {704FCD7F-A888-412B-B86E-E905CC5FB96F}
+		{3E884DAF-D5F9-408C-89B6-8C78688B2869} = {6BABE3E4-38A1-48BE-94FE-86657D09466F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B1997CA-CFFD-4066-A894-1F02C7EAEA73}

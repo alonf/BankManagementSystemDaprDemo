@@ -27,8 +27,8 @@ namespace BMSD.Accessors.CheckingAccount
 
             builder.Services.AddControllers().AddDapr();
 
-            
-            app.MapPost("/UpdateAccount", async (HttpContext httpContext,
+            //Update Account from queue
+            app.MapPost("/accounttransactionqueue", async (HttpContext httpContext,
                     DaprClient daprClient, ILogger logger,
                     ICosmosDBWrapper cosmosDBWrapper, [FromBody] AccountTransactionRequest requestItem) =>
                 {
@@ -157,6 +157,4 @@ namespace BMSD.Accessors.CheckingAccount
             services.AddSingleton<ICosmosDBWrapper>(cosmosDBWrapper);
         }
     }
-    
-    
 }

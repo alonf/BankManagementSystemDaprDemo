@@ -1,36 +1,354 @@
-version: '3.4'
+version: '3.7'
 
 services:
+##############################################
+# Account Manager Microservice + Dapr sidecar
+##############################################
   bmsd.managers.account:
     image: ${DOCKER_REGISTRY-}bmsdmanagersaccount
     build:
       context: .
       dockerfile: Managers/BMSD.Managers.Account/Dockerfile
-
+    ports:
+      - "50010:50001"
+      - "3500:3500"
+#      - "5008:80"
+    depends_on:
+      - redis
+      - placement
+      - rabbitmq
+      - zipkin
+      - bmsd.accessors.userinfo.dapr
+      - bmsd.accessors.checkingaccount.dapr
+      - bmsd.engines.liabilityvalidator.dapr
+    networks:
+      - bmsd
+    environment:
+      - ASPNETCORE_URLS=http://bmsd.managers.account:80
+      - ASPNETCORE_ENVIRONMENT=Development  
+   
+  bmsd.managers.account.dapr:
+    image: daprio/dapr:edge
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+     "-app-id", "accountmanager",
+     "-app-port", "80",
+     "-dapr-http-port", "3500",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/dapr/components",
+     "-config", "/dapr/config.yaml"]
+    volumes:
+        - "./dapr/:/dapr"
+    depends_on:
+      - bmsd.managers.account
+    network_mode: "service:bmsd.managers.account"
+  
+    
+###################################################
+# Notification Manager Microservice + Dapr sidecar
+###################################################
   bmsd.managers.notification:
     image: ${DOCKER_REGISTRY-}bmsdmanagersnotification
     build:
       context: .
       dockerfile: Managers/BMSD.Managers.Notification/Dockerfile
-
-
-  bms.accessors.userinfo:
+    ports:
+      - "50003:50001"
+      - "3501:3500"
+      - "80"
+    depends_on:
+      - placement
+      - rabbitmq
+      - zipkin
+    networks:
+      - bmsd
+    environment:
+      - ASPNETCORE_URLS=http://bmsd.managers.notification:80
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - AZURE__SignalR__ConnectionString=Endpoint=http://signalr;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
+      
+  bmsd.managers.notification.dapr:
+    image: daprio/dapr:edge
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+     "-app-id", "notificationmanager",
+     "-app-port", "80",
+     "-dapr-http-port", "3500",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/dapr/components",
+     "-config", "/dapr/config.yaml"]
+    volumes:
+        - "./dapr/:/dapr"
+    depends_on:
+      - bmsd.managers.notification
+    network_mode: "service:bmsd.managers.notification"
+    
+    
+#################################################
+# User Info Accessor Microservice + Dapr sidecar
+################################################# 
+  bmsd.accessors.userinfo:
     image: ${DOCKER_REGISTRY-}bmsdaccessorsuserinfo
     build:
       context: .
       dockerfile: Accessors/BMSD.Accessors.UserInfo/Dockerfile
+    ports:
+      - "50004:50001"
+      - "80"
+      - "3500"
+    depends_on:
+      - placement
+      - rabbitmq
+      - redis
+      - zipkin
+      - cosmosdb
+    networks:
+      - bmsd
+    environment:
+      - ASPNETCORE_URLS=http://bmsd.accessors.userinfo:80
+      - ASPNETCORE_ENVIRONMENT=Development 
+      - CosmosDbConnectionString=AccountEndpoint=https://cosmosdb:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      
+  bmsd.accessors.userinfo.dapr:
+    image: daprio/dapr:edge
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+     "-app-id", "userinfoaccessor",
+     "-app-port", "80",
+     "-dapr-http-port", "3500",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/dapr/components",
+     "-config", "/dapr/config.yaml"]
+    volumes:
+        - "./dapr/:/dapr"
+    depends_on:
+      - bmsd.accessors.userinfo
+    network_mode: "service:bmsd.accessors.userinfo"
 
-
+    
+########################################################
+# Checking Account Accessor Microservice + Dapr sidecar
+######################################################## 
   bmsd.accessors.checkingaccount:
     image: ${DOCKER_REGISTRY-}bmsdaccessorscheckingaccount
     build:
       context: .
       dockerfile: Accessors/BMSD.Accessors.CheckingAccount/Dockerfile
+    ports:
+      - "50005:50001"
+#      - "80"
+#      - "3500"
+    depends_on:
+      - placement
+      - rabbitmq
+      - redis
+      - zipkin
+      - cosmosdb
+    networks:
+      - bmsd
+    environment:
+      - ASPNETCORE_URLS=http://bmsd.accessors.checkingaccount:80
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - CosmosDbConnectionString=AccountEndpoint=https://cosmosdb:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      
+  bmsd.accessors.checkingaccount.dapr:
+    image: daprio/dapr:edge
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+     "-app-id", "checkingaccountaccessor",
+     "-app-port", "80",
+     "-dapr-http-port", "3500",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/dapr/components",
+     "-config", "/dapr/config.yaml"]
+    volumes:
+        - "./dapr/:/dapr"
+    depends_on:
+      - bmsd.accessors.checkingaccount
+    network_mode: "service:bmsd.accessors.checkingaccount"
 
 
-  bms.engines.liabilityvalidator:
+#########################################################
+# Liability Validator Engine Microservice + Dapr sidecar
+######################################################### 
+  bmsd.engines.liabilityvalidator:
     image: ${DOCKER_REGISTRY-}bmsdenginesliabilityvalidator
     build:
       context: .
       dockerfile: Engines/BMSD.Engines.LiabilityValidator/Dockerfile
+    ports:
+      - "50007:50001"
+      - "80"
+      - "3500"
+    depends_on:
+      - placement
+      - rabbitmq
+      - redis
+      - zipkin
+      - bmsd.accessors.checkingaccount.dapr
+    networks:
+      - bmsd
+    environment:
+      - ASPNETCORE_URLS=http://bmsd.engines.liabilityvalidator:80
+      - ASPNETCORE_ENVIRONMENT=Development  
+      
+  bmsd.engines.liabilityvalidator.dapr:
+    image: daprio/dapr:edge
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+     "-app-id", "liabilityvalidatorengine",
+     "-app-port", "80",
+     "-dapr-http-port", "3500",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/dapr/components",
+     "-config", "/dapr/config.yaml"]
+    volumes:
+        - "./dapr/:/dapr"
+    depends_on:
+      - bmsd.engines.liabilityvalidator
+    network_mode: "service:bmsd.engines.liabilityvalidator"
+
+  ##########
+  # Azurite
+  ##########
+  #azurite:
+  #  image: mcr.microsoft.com/azure-storage/azurite
+  #  hostname: azurite
+  #  command: "azurite-queue --queueHost 0.0.0.0 --loose --skipApiVersionCheck -d /tmp/azurite_debug.log"
+  #  ports:
+  #   - "10000:10000"
+  #   - "10001:10001"
+  #  networks:
+  #    - bmsd
+  #  volumes:
+  #   - ./data/azurite:/data
+
+  ####################
+  # CosmosDB emulator
+  ####################
+  cosmosdb:
+    container_name: cosmosdb
+    image: "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator"
+    tty: true
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+    environment:
+      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=20
+      - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
+    ports:
+       - "8081:8081"
+       - "8900:8900"
+       - "8901:8901"
+       - "8979:8979"
+       - "10250:10250"
+       - "10251:10251"
+       - "10252:10252"
+       - "10253:10253"
+       - "10254:10254"
+       - "10255:10255"
+       - "10256:10256"
+       - "10350:10350"
+    networks:
+      - bmsd
+    volumes:
+       - vol_cosmos:/data/db
+
+  ############################
+  # RabitMQ
+  ############################
+  rabbitmq:
+    image: "rabbitmq:3-management-alpine"
+    ports:
+      - "5672:5672"
+    networks:
+      - bmsd
+
+  ############################
+  # Redis state store
+  ############################
+  redis:
+    image: "redis:alpine"
+    hostname: redisserver
+    ports:
+      - "6379:6379"
+    networks:
+      - bmsd
+
+  ############################
+  # Dapr placement service
+  ############################
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
+    ports:
+      - "50006:50006"
+    networks:
+      - bmsd
+
+  ############################
+  # Dapr zipkin service
+  ############################
+  zipkin:
+    image: "openzipkin/zipkin"
+    ports:
+      - "9411:9411"
+    networks:
+      - bmsd
+
+############################
+# SignalR emulator service
+############################
+  signalr:
+    image: ${DOCKER_REGISTRY-}signalremulator
+    build:
+      context: .
+      dockerfile: ./SignalREmulator/Dockerfile
+    ports:
+      - 8888:8888
+      - 7071:7071
+    volumes:
+     - ./workspace:/workspace
+    environment:
+      - ASRS_EMULATOR_PORT=8888
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8888;http://+:7071
+      
+############################
+# Global settings
+############################
+networks:
+  bmsd:
+
+volumes: 
+  vol_cosmos:
+  workspace:
 

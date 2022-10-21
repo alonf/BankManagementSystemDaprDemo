@@ -8,29 +8,31 @@ using Microsoft.Azure.Cosmos.Fluent;
 
 namespace BMSD.Accessors.CheckingAccount
 {
-    public class Program
+    public class CheckingAccountAccessor
     {
+        const string DatabaseName = "BMSDB";
+        
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddAuthorization();
-
+            builder.Services.AddControllers().AddDapr();
+            using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
+                    .SetMinimumLevel(LogLevel.Trace)
+                    .AddConsole());
+            
+            AddCosmosService(builder.Services, builder.Configuration, loggerFactory);
+            
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-
-            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            builder.Services.AddControllers().AddDapr();
-
             //Update Account from queue
             app.MapPost("/accounttransactionqueue", async (HttpContext httpContext,
-                    DaprClient daprClient, ILogger logger,
-                    ICosmosDBWrapper cosmosDBWrapper, [FromBody] AccountTransactionRequest requestItem) =>
+                    [FromServices] DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+                    [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromBody] AccountTransactionRequest requestItem) =>
                 {
                     if (string.IsNullOrWhiteSpace(requestItem.AccountId)
                         || string.IsNullOrWhiteSpace(requestItem.RequestId))
@@ -73,30 +75,37 @@ namespace BMSD.Accessors.CheckingAccount
                 });
 
             app.MapGet("/GetBalance", async (HttpContext httpContext,
-                DaprClient daprClient, ILogger logger,
-                ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
+                [FromServices] DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+                [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
             {
                 logger.LogInformation("GetBalance HTTP trigger processed a request.");
-
-                if (string.IsNullOrEmpty(accountId))
+                try
                 {
-                    logger.LogError("GetBalance: missing account id parameter");
-                    return Results.Problem("missing accountId parameter");
+                    if (string.IsNullOrEmpty(accountId))
+                    {
+                        logger.LogError("GetBalance: missing account id parameter");
+                        return Results.Problem("missing accountId parameter");
+                    }
+
+                    var balance = await cosmosDBWrapper.GetBalanceAsync(accountId);
+                    var balanceInfo = new BalanceInfo()
+                    {
+                        AccountId = accountId,
+                        Balance = balance
+                    };
+                    return Results.Ok(balanceInfo);
                 }
-
-                var balance = await cosmosDBWrapper.GetBalanceAsync(accountId);
-                var balanceInfo = new BalanceInfo()
+                catch (Exception ex)
                 {
-                    AccountId = accountId,
-                    Balance = balance
-                };
-                return Results.Ok(balanceInfo);
+                    logger.LogError($"GetBalance: error: {ex}");
+                    return Results.Problem("Error getting the balance");
+                }
             });
 
             
             app.MapGet("/GetAccountInfo", async (HttpContext httpContext,
-                DaprClient daprClient, ILogger logger,
-                ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
+                DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+                [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
             {
                 logger.LogInformation("GetAccountInfo HTTP trigger processed a request.");
 
@@ -106,14 +115,22 @@ namespace BMSD.Accessors.CheckingAccount
                     return Results.Problem("missing accountId parameter");
                 }
 
-                var accountInfo = await cosmosDBWrapper.GetAccountInfoAsync(accountId);
-                return Results.Ok(accountInfo);
+                try
+                {
+                    var accountInfo = await cosmosDBWrapper.GetAccountInfoAsync(accountId);
+                    return Results.Ok(accountInfo);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"GetAccountInfo: error: {ex}");
+                    return Results.Problem("Error getting the account info");
+                }
             });
 
 
             app.MapGet("/GetAccountTransactionHistory", async (HttpContext httpContext,
-                DaprClient daprClient, ILogger logger,
-                ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId, [FromQuery] int? numberOfTransactions) =>
+                DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+                [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId, [FromQuery] int? numberOfTransactions) =>
             {
                 logger.LogInformation("GetAccountTransactionHistory HTTP trigger processed a request.");
 
@@ -123,36 +140,49 @@ namespace BMSD.Accessors.CheckingAccount
                     return Results.Problem("missing accountId parameter");
                 }
 
-                numberOfTransactions ??= 10;
-
-                var transactions = await cosmosDBWrapper.GetAccountTransactionHistoryAsync(accountId, numberOfTransactions.Value);
-
-                return Results.Ok(transactions);
+                try
+                {
+                    numberOfTransactions ??= 10;
+                    var transactions = await cosmosDBWrapper.GetAccountTransactionHistoryAsync(accountId, numberOfTransactions.Value);
+                    return Results.Ok(transactions);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"GetAccountTransactionHistory: error: {ex}");
+                    return Results.Problem("Error getting the account transaction history");
+                }
             });
 
             app.Run();
         }
 
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
+        public static void AddCosmosService(IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             //get the cosmos db connection string from the configuration
             var cosmosDbConnectionString = configuration["CosmosDbConnectionString"];
 
-            //get cosmos db checking account database name from configuration
-            var cosmosDbCheckingAccountDatabaseName = configuration["CosmosDbCheckingAccountDatabaseName"];
-
             //Create Cosmos db client using cosmos client builder and camel case serializer
+            //Important Security Note: To use CosmosDB emulator we ignore certification checks!!!
             var cosmosClient = new CosmosClientBuilder(cosmosDbConnectionString)
                 .WithSerializerOptions(new CosmosSerializationOptions
                 {
                     PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
                 })
+                .WithHttpClientFactory(() =>
+                {
+                    HttpMessageHandler httpMessageHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                    };
+                    return new HttpClient(httpMessageHandler);
+                })
+                .WithConnectionModeGateway()
                 .Build();
 
             //get logger from services
             var logger = loggerFactory.CreateLogger<CosmosDBWrapper>();
 
-            var cosmosDBWrapper = new CosmosDBWrapper(cosmosClient, cosmosDbCheckingAccountDatabaseName, logger);
+            var cosmosDBWrapper = new CosmosDBWrapper(cosmosClient, DatabaseName, logger);
 
             services.AddSingleton<ICosmosDBWrapper>(cosmosDBWrapper);
         }

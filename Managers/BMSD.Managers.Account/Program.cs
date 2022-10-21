@@ -3,28 +3,29 @@ namespace BMSD.Managers.Account
     using AutoMapper;
     using Contracts.Responses;
     using Dapr.Client;
+    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Text.Json;
 
-    public class Program
+    public class AccountManager
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new()
+                {
+                    Title = builder.Environment.ApplicationName,
+                    Version = "v1"
+                });
+            });
+
             // Add services to the container.
             builder.Services.AddAuthorization();
-
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
             builder.Services.AddControllers().AddDapr();
 
             try
@@ -40,7 +41,20 @@ namespace BMSD.Managers.Account
                 throw;
             }
 
-            app.MapPost("/RegisterCustomer", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                                                $"{builder.Environment.ApplicationName} v1"));
+            }
+
+            // Configure the HTTP request pipeline.
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+
+            app.MapPost("/RegisterCustomer", async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger RegisterCustomer");
                 try
@@ -81,11 +95,11 @@ namespace BMSD.Managers.Account
                     logger.LogError($"RegisterCustomer: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("RegisterCustomer");
 
 
             app.MapGet("/GetAccountId",
-                async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+                async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger GetAccountId");
                 try
@@ -98,8 +112,7 @@ namespace BMSD.Managers.Account
                     }
 
                     var accountId =
-                        await daprClient.InvokeMethodAsync<string, AccountIdInfo>("useraccessor", "GetAccountId",
-                            $"email={email}");
+                        await daprClient.InvokeMethodAsync<AccountIdInfo>(HttpMethod.Get, "userinfoaccessor", $"GetAccountId/email={email}");
 
                     if (accountId == null)
                     {
@@ -112,10 +125,11 @@ namespace BMSD.Managers.Account
                     logger.LogError($"GetAccountId: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("GetAccountId");
 
 
-            app.MapGet("/GetAccountBalance", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            app.MapGet("/GetAccountBalance", async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, 
+                [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger GetAccountBalance");
                 try
@@ -127,8 +141,7 @@ namespace BMSD.Managers.Account
                         return Results.Problem("Expecting the account id");
                     }
 
-                    var balanceInfo = await daprClient.InvokeMethodAsync<string, Contracts.Responses.BalanceInfo>("checkingaccountaccessor", "GetAccountBalance", $"accountId={accountId}");
-
+                    var balanceInfo = await daprClient.InvokeMethodAsync<Contracts.Responses.BalanceInfo>(HttpMethod.Get, "checkingaccountaccessor", $"GetBalance?accountId={accountId}");
                     if (balanceInfo == null)
                     {
                         return Results.Problem($"Account not found for id {accountId}");
@@ -140,10 +153,11 @@ namespace BMSD.Managers.Account
                     logger.LogError($"GetAccountBalance: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("GetAccountBalance");
 
 
-            app.MapGet("/GetAccountTransactionHistory", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            app.MapGet("/GetAccountTransactionHistory", async (HttpContext httpContext, 
+                [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger GetAccountTransactionHistory");
                 try
@@ -162,8 +176,8 @@ namespace BMSD.Managers.Account
                         numberOfTransactions = "10"; //default
                     }
 
-                    var accountTransactionHistory = await daprClient.InvokeMethodAsync<string, Contracts.Responses.AccountTransactionResponse[]>(
-                            "checkingaccountaccessor", "GetAccountTransactionHistory", $"accountId={accountId}&numberOfTransactions={numberOfTransactions}");
+                    var accountTransactionHistory = await daprClient.InvokeMethodAsync<Contracts.Responses.AccountTransactionResponse[]>(
+                            HttpMethod.Get, "checkingaccountaccessor", $"GetAccountTransactionHistory?accountId={accountId}&numberOfTransactions={numberOfTransactions}");
 
                     if (accountTransactionHistory == null)
                     {
@@ -176,10 +190,11 @@ namespace BMSD.Managers.Account
                     logger.LogError($"GetAccountTransactionHistory: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("GetAccountTransactionHistory"); 
 
 
-            app.MapPost("/Deposit", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            app.MapPost("/Deposit", async (HttpContext httpContext,
+                [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger Deposit");
                 try
@@ -219,10 +234,11 @@ namespace BMSD.Managers.Account
                     logger.LogError($"Deposit: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("Deposit");
 
 
-            app.MapPost("/Withdraw", async (HttpContext httpContext, ILogger logger, DaprClient daprClient, IMapper mapper) =>
+            app.MapPost("/Withdraw", async (HttpContext httpContext,
+                [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger Withdraw");
                 try
@@ -272,7 +288,7 @@ namespace BMSD.Managers.Account
                     logger.LogError($"Withdraw: Error occurred when processing a message: {e}");
                     return Results.Problem();
                 }
-            });
+            }).WithName("Withdraw"); ;
 
 
             app.Run();
@@ -293,9 +309,8 @@ namespace BMSD.Managers.Account
         private static async Task<bool> CheckLiabilityAsync(DaprClient daprClient, ILogger logger, string accountId, decimal amount)
         {
             //Check liability
-            var liabilityCheckResult = await daprClient.InvokeMethodAsync<string, LiabilityResult>(
-                "liabilityaccessor", "CheckLiability", $"accountId={accountId}&amount={amount.ToString(CultureInfo.InvariantCulture)}");
-
+            var liabilityCheckResult = await daprClient.InvokeMethodAsync<LiabilityResult>(
+                HttpMethod.Get, "liabilityvalidatorengine", $"CheckLiability?accountId={accountId}&amount={amount.ToString(CultureInfo.InvariantCulture)}");
 
             if (liabilityCheckResult == null)
             {

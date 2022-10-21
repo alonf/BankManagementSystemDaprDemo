@@ -47,7 +47,7 @@ namespace BMSD.Managers.Notification.Controllers
                 Arguments = new[] { argument }
             };
 
-            await _daprClient.InvokeBindingAsync("azuresignalroutput", "create", message);
+            await _daprClient.InvokeBindingAsync("clientcallback", "create", message);
             return Ok();
         }
     }

@@ -16,7 +16,7 @@ public class SignalRWrapper : ISignalRWrapper
     {
         var signalRUrl = Environment.GetEnvironmentVariable("BMS_SIGNALR_URL");
         if (string.IsNullOrEmpty(signalRUrl))
-            signalRUrl = "http://localhost:7043/api/";
+            signalRUrl = "http://localhost:3501/v1.0/invoke/notificationmanager/method";
 
         _signalRHubConnection = new HubConnectionBuilder()
             .WithUrl(signalRUrl, c=>c.Headers.Add("x-application-user-id", "Teller1"))

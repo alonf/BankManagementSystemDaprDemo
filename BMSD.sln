@@ -12,8 +12,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6BABE3E4-38A1-48BE-94FE-86657D09466F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{BD8F0A5A-3772-478D-95CA-9E20057F2FCD}"
+	ProjectSection(SolutionItems) = preProject
+		Dapr\config.yaml = Dapr\config.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{34577C4A-2FEF-42E3-AA6B-03FB68058287}"
+	ProjectSection(SolutionItems) = preProject
+		Dapr\components\processedrequests.yaml = Dapr\components\processedrequests.yaml
+		Dapr\components\accounttransactionqueue.yaml = Dapr\components\accounttransactionqueue.yaml
+		Dapr\components\clientcallback.yaml = Dapr\components\clientcallback.yaml
+		Dapr\components\clientresponsequeue.yaml = Dapr\components\clientresponsequeue.yaml
+		Dapr\components\customerregistrationqueue.yaml = Dapr\components\customerregistrationqueue.yaml
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Account", "Managers\BMSD.Managers.Account\BMSD.Managers.Account.csproj", "{408EA9D2-5983-4147-87B0-EA37B1E4976E}"
 EndProject
@@ -21,13 +31,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Notification"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Accessors.CheckingAccount", "Accessors\BMSD.Accessors.CheckingAccount\BMSD.Accessors.CheckingAccount.csproj", "{80D66434-10F3-418E-A5CF-95FF22286DFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSD.Accessors.UserInfo", "Accessors\BMSD.Accessors.UserInfo\BMSD.Accessors.UserInfo.csproj", "{F6C4BB2D-6929-42E1-BC52-C43905B5894C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Accessors.UserInfo", "Accessors\BMSD.Accessors.UserInfo\BMSD.Accessors.UserInfo.csproj", "{F6C4BB2D-6929-42E1-BC52-C43905B5894C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSD.Engines.LiabilityValidator", "Engines\BMSD.Engines.LiabilityValidator\BMSD.Engines.LiabilityValidator.csproj", "{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Engines.LiabilityValidator", "Engines\BMSD.Engines.LiabilityValidator\BMSD.Engines.LiabilityValidator.csproj", "{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Tests.IntegrationTests", "Tests\BMSD.Tests.IntegrationTests\BMSD.Tests.IntegrationTests.csproj", "{3E884DAF-D5F9-408C-89B6-8C78688B2869}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DE784C84-F713-4A14-ADCE-529756E25FF9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SignalREmulator", "SignalREmulator", "{E97812BD-471B-42B0-8D8F-A567874CC7BC}"
+	ProjectSection(SolutionItems) = preProject
+		SignalREmulator\Dockerfile = SignalREmulator\Dockerfile
+		SignalREmulator\settings.json = SignalREmulator\settings.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

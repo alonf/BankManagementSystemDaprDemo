@@ -1,24 +1,17 @@
 using Dapr.Client;
-using Google.Protobuf.Reflection;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
 using System.Net;
 using System.Text.Json.Nodes;
 using Json.Schema;
-using Newtonsoft.Json.Linq;
-using Json.More;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 
 namespace BMS.Accessors.UserInfo
 {
-    public class Program
+    public class UserInfoAccessor
     {
         private static bool _dbHasAlreadyInitiated;
-        static string? DatabaseName { get; set; }
+        const string DatabaseName = "BMSDB";
         const string CollectionName = "UserInfo";
 
         public static void Main(string[] args)
@@ -32,10 +25,6 @@ namespace BMS.Accessors.UserInfo
             
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
             //get the cosmos db connection string from the configuration
@@ -47,27 +36,28 @@ namespace BMS.Accessors.UserInfo
                 throw new Exception("Error in configuration: CosmosDbConnectionString is null or empty");
             }
 
-            //get cosmos db checking account database name from configuration
-            var DatabaseName = builder.Configuration["CosmosDbUserInfoDatabaseName"];
-
-            //check that the database name is not null
-            if (string.IsNullOrWhiteSpace(DatabaseName))
-            {
-                throw new Exception("Error in configuration: CosmosDbUserInfoDatabaseName is null or empty");
-            }
-
             //Create Cosmos db client using cosmos client builder and camel case serializer
+            //Important Security Note: To use CosmosDB emulator we ignore certification checks!!!
             var cosmosClient = new CosmosClientBuilder(cosmosDbConnectionString)
                 .WithSerializerOptions(new CosmosSerializationOptions
                 {
                     PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
                 })
+                .WithHttpClientFactory(() =>
+                {
+                    HttpMessageHandler httpMessageHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                    };
+                    return new HttpClient(httpMessageHandler);
+                })
+                .WithConnectionModeGateway()
                 .Build();
 
 
             //Register Customer
             app.MapPost("/customerregistrationqueue", async (HttpContext httpContext,
-                    DaprClient daprClient, ILogger logger) =>
+                    [FromServices] DaprClient daprClient, [FromServices] ILogger<UserInfoAccessor> logger) =>
             {
                 string userAccountId = "unknown";
                 string requestId = "unknown";
@@ -186,7 +176,7 @@ namespace BMS.Accessors.UserInfo
             });
 
             app.MapGet("/GetAccountIdByEmail", async (HttpContext httpContext,
-                    DaprClient daprClient, ILogger logger) =>
+                    [FromServices] DaprClient daprClient, [FromServices] ILogger<UserInfoAccessor> logger) =>
             {
                 try
                 {

@@ -4,11 +4,22 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "bms.accessors.userinfo": "StartWithoutDebugging",
-        "bms.engines.liabilityvalidator": "StartWithoutDebugging",
+        "bmsd.accessors.userinfo": "StartDebugging",
+        "bmsd.engines.liabilityvalidator": "StartDebugging",
         "bmsd.accessors.checkingaccount": "StartDebugging",
         "bmsd.managers.account": "StartDebugging",
-        "bmsd.managers.notification": "StartDebugging"
+        "bmsd.managers.notification": "StartDebugging",
+        "bmsd.accessors.checkingaccount.dapr": "StartWithoutDebugging",
+        "bmsd.accessors.userinfo.dapr": "StartWithoutDebugging",
+        "bmsd.engines.liabilityvalidator.dapr": "StartWithoutDebugging",
+        "bmsd.managers.account.dapr": "StartWithoutDebugging",
+        "bmsd.managers.notification.dapr": "StartWithoutDebugging",
+        "cosmosdb": "StartWithoutDebugging",
+        "placement": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "redis": "StartWithoutDebugging",
+        "signalr": "StartWithoutDebugging",
+        "zipkin": "StartWithoutDebugging"
       }
     }
   }

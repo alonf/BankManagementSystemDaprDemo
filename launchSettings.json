@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "bms.accessors.userinfo": "StartWithoutDebugging",
+        "bms.engines.liabilityvalidator": "StartWithoutDebugging",
+        "bmsd.accessors.checkingaccount": "StartDebugging",
+        "bmsd.managers.account": "StartDebugging",
+        "bmsd.managers.notification": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  bmsd.managers.account:
+    image: ${DOCKER_REGISTRY-}bmsdmanagersaccount
+    build:
+      context: .
+      dockerfile: Managers/BMSD.Managers.Account/Dockerfile
+
+  bmsd.managers.notification:
+    image: ${DOCKER_REGISTRY-}bmsdmanagersnotification
+    build:
+      context: .
+      dockerfile: Managers/BMSD.Managers.Notification/Dockerfile
+
+
+  bms.accessors.userinfo:
+    image: ${DOCKER_REGISTRY-}bmsdaccessorsuserinfo
+    build:
+      context: .
+      dockerfile: Accessors/BMSD.Accessors.UserInfo/Dockerfile
+
+
+  bmsd.accessors.checkingaccount:
+    image: ${DOCKER_REGISTRY-}bmsdaccessorscheckingaccount
+    build:
+      context: .
+      dockerfile: Accessors/BMSD.Accessors.CheckingAccount/Dockerfile
+
+
+  bms.engines.liabilityvalidator:
+    image: ${DOCKER_REGISTRY-}bmsdenginesliabilityvalidator
+    build:
+      context: .
+      dockerfile: Engines/BMSD.Engines.LiabilityValidator/Dockerfile
+

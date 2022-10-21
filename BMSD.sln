@@ -21,11 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Notification"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Accessors.CheckingAccount", "Accessors\BMSD.Accessors.CheckingAccount\BMSD.Accessors.CheckingAccount.csproj", "{80D66434-10F3-418E-A5CF-95FF22286DFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS.Accessors.UserInfo", "Accessors\BMS.Accessors.UserInfo\BMS.Accessors.UserInfo.csproj", "{F6C4BB2D-6929-42E1-BC52-C43905B5894C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSD.Accessors.UserInfo", "Accessors\BMSD.Accessors.UserInfo\BMSD.Accessors.UserInfo.csproj", "{F6C4BB2D-6929-42E1-BC52-C43905B5894C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS.Engines.LiabilityValidator", "Engines\BMS.Engines.LiabilityValidator\BMS.Engines.LiabilityValidator.csproj", "{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSD.Engines.LiabilityValidator", "Engines\BMSD.Engines.LiabilityValidator\BMSD.Engines.LiabilityValidator.csproj", "{F9045590-7D38-4944-BD1C-93B8E4B7D2F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Tests.IntegrationTests", "Tests\BMS.Tests.IntegrationTests\BMSD.Tests.IntegrationTests.csproj", "{3E884DAF-D5F9-408C-89B6-8C78688B2869}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Tests.IntegrationTests", "Tests\BMSD.Tests.IntegrationTests\BMSD.Tests.IntegrationTests.csproj", "{3E884DAF-D5F9-408C-89B6-8C78688B2869}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DE784C84-F713-4A14-ADCE-529756E25FF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E884DAF-D5F9-408C-89B6-8C78688B2869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

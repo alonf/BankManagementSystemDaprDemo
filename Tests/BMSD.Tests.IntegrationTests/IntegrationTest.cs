@@ -48,10 +48,10 @@ namespace BMSD.Tests.IntegrationTests
             Assert.NotNull(response);
             Assert.Equal(200, (int)response.StatusCode);
 
-            var result = await _signalR.WaitForSignalREventAsync();
+            var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages=>
+                messages.Where(m => m.RequestId == customerRegistrationInfo.RequestId).Any());
+            
             Assert.True(result);
-            Assert.NotEmpty(_signalR.Messages);
-            Assert.Contains(customerRegistrationInfo.RequestId, _signalR.Messages.Select(e => e.RequestId));
             var accountId = _signalR.Messages.Where(e => e.RequestId == customerRegistrationInfo.RequestId).Select(e => e.AccountId).FirstOrDefault();
             Assert.NotNull(accountId);
 
@@ -112,15 +112,12 @@ namespace BMSD.Tests.IntegrationTests
             Assert.NotNull(response);
             Assert.Equal(200, (int)response.StatusCode);
 
-            var result = await _signalR.WaitForSignalREventAsync();
+            var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
+                messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
             Assert.True(result);
-            Assert.NotEmpty(_signalR.Messages);
-            Assert.Contains(accountTransactionInfo.RequestId, _signalR.Messages.Select(e => e.RequestId));
-
+            
             var endBalanceInfo = await GetAccountBalanceAsync(accountId);
-
             Assert.Equal(startBalanceInfo.Balance + 100, endBalanceInfo.Balance);
-
         }
 
         [Fact]
@@ -147,10 +144,10 @@ namespace BMSD.Tests.IntegrationTests
             Assert.NotNull(response);
             Assert.Equal(200, (int)response.StatusCode);
 
-            var result = await _signalR.WaitForSignalREventAsync();
+            var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
+                messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
             Assert.True(result);
-            Assert.NotEmpty(_signalR.Messages);
-            Assert.Contains(accountTransactionInfo.RequestId, _signalR.Messages.Select(e => e.RequestId));
+
             Assert.True(_signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
 
             var endBalanceInfo = await GetAccountBalanceAsync(accountId);
@@ -210,10 +207,9 @@ namespace BMSD.Tests.IntegrationTests
                 Assert.NotNull(response);
                 Assert.Equal(200, (int)response.StatusCode);
 
-                var result = await _signalR.WaitForSignalREventAsync();
+                var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
+                    messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
                 Assert.True(result);
-                Assert.NotEmpty(_signalR.Messages);
-                Assert.Contains(accountTransactionInfo.RequestId, _signalR.Messages.Select(e => e.RequestId));
                 Assert.True(_signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
             }
 

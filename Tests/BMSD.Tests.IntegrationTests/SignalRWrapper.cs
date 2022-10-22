@@ -63,6 +63,19 @@ public class SignalRWrapper : ISignalRWrapper
         return isSucceeded;
     }
 
+    async Task<bool> ISignalRWrapper.WaitForSignalREventWithConditionAsync(int timeoutInSeconds, Func<IList<AccountCallbackRequest>, bool> condition)
+    {
+        var startTime = DateTimeOffset.UtcNow;
+        bool result = false;
+        do
+        {
+            var timeToWait = (int)(timeoutInSeconds - (DateTimeOffset.UtcNow - startTime).TotalSeconds);
+            await _signalRMessageReceived.WaitAsync(timeToWait * 1000);
+        } while (!(result = condition(_signalRMessagesReceived)));
+        
+        return result;
+    }
+
     IList<AccountCallbackRequest> ISignalRWrapper.Messages => _signalRMessagesReceived;
 
     public ITestOutputHelper TestOutputHelper { get; }

@@ -19,10 +19,10 @@ jobs:
         shell: bash
         working-directory: /
     steps:
-    - name: pwd
-      run: pwd
     - name: Checkout code
       uses: actions/checkout@v3
+    - name: ls
+      run: ls -lR
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:

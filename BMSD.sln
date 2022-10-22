@@ -18,11 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr", "dapr", "{BD8F0A5A-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{34577C4A-2FEF-42E3-AA6B-03FB68058287}"
 	ProjectSection(SolutionItems) = preProject
-		Dapr\components\processedrequests.yaml = dapr\components\processedrequests.yaml
-		Dapr\components\accounttransactionqueue.yaml = dapr\components\accounttransactionqueue.yaml
-		Dapr\components\clientcallback.yaml = dapr\components\clientcallback.yaml
-		Dapr\components\clientresponsequeue.yaml = dapr\components\clientresponsequeue.yaml
-		Dapr\components\customerregistrationqueue.yaml = dapr\components\customerregistrationqueue.yaml
+		Dapr\components\accounttransactionqueue.yaml = Dapr\components\accounttransactionqueue.yaml
+		Dapr\components\clientcallback.yaml = Dapr\components\clientcallback.yaml
+		Dapr\components\clientresponsequeue.yaml = Dapr\components\clientresponsequeue.yaml
+		Dapr\components\customerregistrationqueue.yaml = Dapr\components\customerregistrationqueue.yaml
+		Dapr\components\processedrequests.yaml = Dapr\components\processedrequests.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Account", "Managers\BMSD.Managers.Account\BMSD.Managers.Account.csproj", "{408EA9D2-5983-4147-87B0-EA37B1E4976E}"

@@ -1,0 +1,46 @@
+name: Backend Integration Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+   
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - master
+   
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: /
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: |
+          3.1.x
+          6.0.x
+    - name: Docker Compose Up
+      run: docker compose up -d
+    - name: Restore dependencies
+      run: dotnet restore BMSD.sln
+    - name: Build
+      run: dotnet build --no-restore BMSD.sln
+    - name: Install SignalR Emulator
+      shell: bash
+    - name: Docker ps
+      run: docker ps
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --configuration Debug Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
+    - name: Dump docker logs on failure
+      if: failure()
+      uses: jwalton/gh-docker-logs@v1
+    - name: Stop containers
+      if: always()
+      run: docker compose down

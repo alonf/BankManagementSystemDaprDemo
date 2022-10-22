@@ -20,8 +20,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: ls
-      run: ls -l
+    - name: get ip address
+      run: /sbin/ip route|awk '/default/ { print $3 }'
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:

@@ -18,6 +18,8 @@ jobs:
       run:
         shell: bash
     steps:
+    - name: env
+      run: export
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET
@@ -26,7 +28,7 @@ jobs:
         dotnet-version: |
           6.0.x
     - name: fix the unsupported host.docker.internal host ip address
-      run: ip=`/sbin/ip route|awk '/default/ { print $3 }'` && sed -i 's/host\.docker\.internal\:8888/'$ip/ dapr/components/clientcallback.yaml
+      run: ip=`/sbin/ip route|awk '/default/ { print $3 }'` && sed -i 's/host\.docker\.internal/'$ip/ dapr/components/clientcallback.yaml
     - name: Docker Compose Up
       run: docker compose up -d
     - name: Restore dependencies

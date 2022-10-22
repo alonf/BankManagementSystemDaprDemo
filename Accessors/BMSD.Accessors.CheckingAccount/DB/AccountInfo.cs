@@ -5,17 +5,19 @@ namespace BMSD.Accessors.CheckingAccount.DB
 {
     public class AccountInfo
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string? Id { get; set; } //account id
-        [JsonPropertyName("accountBalance")]
+        [JsonProperty("bankId")]
+        public string? BankId { get; set; } = "The Bank";
+        [JsonProperty("accountBalance")]
         public decimal AccountBalance { get; set; }
-        [JsonPropertyName("overdraftLimit")]
+        [JsonProperty("overdraftLimit")]
         public decimal OverdraftLimit { get; set; }
-        [JsonPropertyName("accountTransactions")]
+        [JsonProperty("accountTransactions")]
         public List<string> AccountTransactions { get; set; } = new List<string>();
-        [JsonPropertyName("_etag")]
+        [JsonProperty("_etag")]
         public string? ETag { get; set; }
-        [JsonPropertyName("_self")]
+        [JsonProperty("_self")]
         public string? Self { get; set; }
     }
 }

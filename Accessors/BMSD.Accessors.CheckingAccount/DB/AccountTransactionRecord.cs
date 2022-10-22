@@ -1,16 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace BMSD.Accessors.CheckingAccount.DB
 {
     public class AccountTransactionRecord
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string? Id { get; set; }
-        [JsonPropertyName("accountId")]
+        [JsonProperty("accountId")]
         public string? AccountId { get; set; }
-        [JsonPropertyName("transactionAmount")]
+        [JsonProperty("transactionAmount")]
         public decimal TransactionAmount { get; set; }
-        [JsonPropertyName("transactionTime")]
+        [JsonProperty("transactionTime")]
         public DateTimeOffset TransactionTime { get; set; }
     }
 }

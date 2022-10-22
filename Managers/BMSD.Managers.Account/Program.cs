@@ -273,7 +273,7 @@ namespace BMSD.Managers.Account
                     if (!await CheckLiabilityAsync(daprClient, logger, data.AccountId, data.Amount))
                     {
                         logger.LogInformation("Withdraw request failed, the withdraw operation is forbidden");
-                        return Results.Problem("The user is not allowed to withdraw");
+                        return Results.BadRequest("The user is not allowed to withdraw");
                     }
                     
                     data.Amount = -data.Amount;
@@ -327,7 +327,7 @@ namespace BMSD.Managers.Account
                 throw new Exception("liabilityValidator service returned an error");
             }
 
-            return liabilityCheckResult.WithdrawAllowed;
+            return bool.Parse(liabilityCheckResult.WithdrawAllowed ?? "False");
         }
     }
 }

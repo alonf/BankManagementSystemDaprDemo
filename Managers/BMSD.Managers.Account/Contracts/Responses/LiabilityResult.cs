@@ -5,7 +5,7 @@ namespace BMSD.Managers.Account.Contracts.Responses
     {
         public string? AccountId { get; set; }
 
-        public bool WithdrawAllowed { get; set; }
+        public string? WithdrawAllowed { get; set; }
     }
 }
 

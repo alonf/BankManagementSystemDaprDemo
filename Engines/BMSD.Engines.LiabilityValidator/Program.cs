@@ -66,7 +66,7 @@ namespace BMS.Engines.LiabilityValidator
                                            (withdrawAllowed ? string.Empty : "not ") +
                                           $"allowed. The overdraft limit is: {overdraftLimit}");
 
-                    return Results.Ok(JsonObject.Parse($"{{'withdrawAllowed':'{withdrawAllowed}'}}"));
+                    return Results.Ok(JsonObject.Parse($"{{\"withdrawAllowed\":\"{withdrawAllowed}\"}}"));
                 }
                 catch (Exception ex)
                 {

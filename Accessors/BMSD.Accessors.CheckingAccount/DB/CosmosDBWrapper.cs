@@ -114,8 +114,10 @@ namespace BMSD.Accessors.CheckingAccount.DB
                     IfMatchEtag = accountInfo.ETag
                 };
 
+                var accountInfoContainer = _cosmosClient.GetContainer(_databaseName, AccountInfoName);
+                
                 //replace the account info document
-                var replaceItemResponse = await container.ReplaceItemAsync(accountInfo, accountInfo.Id, null, itemRequestOptions);
+                var replaceItemResponse = await accountInfoContainer.ReplaceItemAsync(accountInfo, accountInfo.Id, new PartitionKey(accountInfo.BankId), itemRequestOptions);
 
                 _logger.LogInformation($"UpdateBalanceAsync: update account info, result status: {replaceItemResponse.StatusCode} ");
             }
@@ -140,11 +142,11 @@ namespace BMSD.Accessors.CheckingAccount.DB
             var database = _cosmosClient.GetDatabase(_databaseName);
 
             //create the account transaction collection if not exist
-            var accountTransactionContainerResponse = database.CreateContainerIfNotExistsAsync(AccountTransactionName, "/requestId");
+            var accountTransactionContainerResponse = database.CreateContainerIfNotExistsAsync(AccountTransactionName, "/accountId");
             _logger.LogInformation($"InitDBIfNotExistsAsync:  create {AccountTransactionName} if not exist status code:{accountTransactionContainerResponse.Status}");
 
             //create the account info collection if not exist
-             var accountInfoContainerResponse = await database.CreateContainerIfNotExistsAsync(AccountInfoName, "/overdraftLimit");
+             var accountInfoContainerResponse = await database.CreateContainerIfNotExistsAsync(AccountInfoName, "/bankId");
             _logger.LogInformation($"InitDBIfNotExistsAsync: create {AccountInfoName} if not exist status code:{accountInfoContainerResponse.StatusCode}");
             
             _dbHasAlreadyInitiated = true;
@@ -167,7 +169,7 @@ namespace BMSD.Accessors.CheckingAccount.DB
 
                 var container = _cosmosClient.GetContainer(_databaseName, AccountTransactionName);
                 var transactionQuery = container.GetItemLinqQueryable<AccountTransactionRecord>()
-                    .Where(r => transactionIds.Contains(r.AccountId)).ToFeedIterator();
+                    .Where(r => transactionIds.Contains(r.Id)).ToFeedIterator();
 
                 var accountTransactions = new List<AccountTransactionRecord>();
                 double charge = 0.0;

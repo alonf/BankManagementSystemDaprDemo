@@ -43,7 +43,7 @@ services:
      "-components-path", "/dapr/components",
      "-config", "/dapr/config.yaml"]
     volumes:
-        - ./dapr:/dapr
+        - "./dapr/:/dapr"
     depends_on:
       - bmsd.managers.account
     network_mode: "service:bmsd.managers.account"
@@ -88,7 +88,7 @@ services:
      "-components-path", "/dapr/components",
      "-config", "/dapr/config.yaml"]
     volumes:
-        - ./dapr/:/dapr
+      - "./dapr/:/dapr"
     depends_on:
       - bmsd.managers.notification
     network_mode: "service:bmsd.managers.notification"
@@ -135,7 +135,7 @@ services:
      "-components-path", "/dapr/components",
      "-config", "/dapr/config.yaml"]
     volumes:
-        - ./dapr:/dapr
+      - "./dapr/:/dapr"
     depends_on:
       - bmsd.accessors.userinfo
     network_mode: "service:bmsd.accessors.userinfo"
@@ -182,7 +182,7 @@ services:
      "-components-path", "/dapr/components",
      "-config", "/dapr/config.yaml"]
     volumes:
-        - ./dapr:/dapr
+      - "./dapr/:/dapr"
     depends_on:
       - bmsd.accessors.checkingaccount
     network_mode: "service:bmsd.accessors.checkingaccount"
@@ -228,7 +228,7 @@ services:
      "-components-path", "/dapr/components",
      "-config", "/dapr/config.yaml"]
     volumes:
-        - ./dapr:/dapr
+      - "./dapr/:/dapr"
     depends_on:
       - bmsd.engines.liabilityvalidator
     network_mode: "service:bmsd.engines.liabilityvalidator"

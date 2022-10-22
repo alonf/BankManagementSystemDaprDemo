@@ -32,8 +32,6 @@ jobs:
       run: dotnet restore BMSD.sln
     - name: Build
       run: dotnet build --no-restore BMSD.sln
-    - name: Install SignalR Emulator
-      shell: bash
     - name: Docker ps
       run: docker ps
     - name: Test

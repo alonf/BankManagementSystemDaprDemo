@@ -10,14 +10,12 @@ namespace BMSD.Tests.IntegrationTests
         private readonly HttpClient _httpClient;
         private readonly ISignalRWrapper _signalR;
         private readonly ITestOutputHelper _testOutputHelper;
-        private readonly bool _isGitHubActionRun;
 
         public IntegrationTest(IHttpClientFactory httpClientFactory, ISignalRWrapperFactory signalRWrapperFactory, ITestOutputHelper testOutputHelper)
         {
             _signalR = signalRWrapperFactory.Create(testOutputHelper);
             _testOutputHelper = testOutputHelper;
             _httpClient = httpClientFactory.CreateClient("IntegrationTest");
-            _isGitHubActionRun = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
         }
         private JsonSerializerOptions SerializeOptions => new JsonSerializerOptions
         {
@@ -53,10 +51,9 @@ namespace BMSD.Tests.IntegrationTests
             var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages=>
                 messages.Where(m => m.RequestId == customerRegistrationInfo.RequestId).Any());
             
-            Assert.True(result || _isGitHubActionRun);
+            Assert.True(result);
             var accountId = _signalR.Messages.Where(e => e.RequestId == customerRegistrationInfo.RequestId).Select(e => e.AccountId).FirstOrDefault();
-            if (!_isGitHubActionRun)
-                Assert.NotNull(accountId);
+            Assert.NotNull(accountId);
 
             var testResponse = await _httpClient.GetAsync($"GetAccountId?email={customerRegistrationInfo.Email}");
             Assert.NotNull(testResponse);
@@ -66,10 +63,6 @@ namespace BMSD.Tests.IntegrationTests
             var accountArray = JsonSerializer.Deserialize<AccountIdInfo>(responseJson, SerializeOptions);
             Assert.NotNull(accountArray);
             Assert.NotEmpty(accountArray.AccountIds);
-
-            if (!_isGitHubActionRun)
-                accountId = accountArray.AccountIds.Last();
-            
             Assert.Contains(accountId, accountArray.AccountIds);
 
             return accountId;
@@ -121,8 +114,8 @@ namespace BMSD.Tests.IntegrationTests
 
             var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
                 messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
-            Assert.True(result || _isGitHubActionRun);
-
+            Assert.True(result);
+            
             var endBalanceInfo = await GetAccountBalanceAsync(accountId);
             Assert.Equal(startBalanceInfo.Balance + 100, endBalanceInfo.Balance);
         }
@@ -153,9 +146,9 @@ namespace BMSD.Tests.IntegrationTests
 
             var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
                 messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
-            Assert.True(result || _isGitHubActionRun);
+            Assert.True(result);
 
-            Assert.True(_isGitHubActionRun || _signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
+            Assert.True(_signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
 
             var endBalanceInfo = await GetAccountBalanceAsync(accountId);
 
@@ -216,8 +209,8 @@ namespace BMSD.Tests.IntegrationTests
 
                 var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
                     messages.Where(m => m.RequestId == accountTransactionInfo.RequestId).Any());
-                Assert.True(_isGitHubActionRun || result);
-                Assert.True(_isGitHubActionRun || _signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
+                Assert.True(result);
+                Assert.True(_signalR.Messages.Where(e => e.RequestId == accountTransactionInfo.RequestId).First().IsSuccessful);
             }
 
             var responseHistory = await _httpClient.GetAsync($"GetAccountTransactionHistory?accountId={accountId}");

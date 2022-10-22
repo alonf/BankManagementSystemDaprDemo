@@ -26,7 +26,10 @@ namespace BMSD.Managers.Account
 
             // Add services to the container.
             builder.Services.AddAuthorization();
-            builder.Services.AddControllers().AddDapr();
+            builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
 
             try
             {
@@ -54,6 +57,12 @@ namespace BMSD.Managers.Account
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
+            var serializeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            
             app.MapPost("/RegisterCustomer", async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger RegisterCustomer");
@@ -61,7 +70,7 @@ namespace BMSD.Managers.Account
                 {
                     // extract request from the body
                     string requestBody = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
-                    var data = JsonSerializer.Deserialize<Contracts.Requests.CustomerRegistrationInfo>(requestBody);
+                    var data = JsonSerializer.Deserialize<Contracts.Requests.CustomerRegistrationInfo>(requestBody, serializeOptions);
 
                     if (data == null)
                     {
@@ -73,11 +82,11 @@ namespace BMSD.Managers.Account
                     if (await RequestAlreadyProcessedAsync(daprClient, data.RequestId))
                     {
                         logger.LogInformation($"RegisterCustomer request id {data.RequestId} already processed");
-                        return Results.Problem($"Request id {data.RequestId} already processed");
+                        return Results.Ok($"Request id {data.RequestId} already processed");
                     }
                     //create a customer registration request for the User accessor
                     var customerRegistrationInfoSubmit = mapper.Map<Contracts.Submits.CustomerRegistrationInfo>(data);
-                    var messagePayload = JsonSerializer.Serialize(customerRegistrationInfoSubmit);
+                    var messagePayload = JsonSerializer.Serialize(customerRegistrationInfoSubmit, serializeOptions);
 
                     //push the customer registration request
                     await daprClient.InvokeBindingAsync("customerregistrationqueue", "create", customerRegistrationInfoSubmit);
@@ -112,7 +121,7 @@ namespace BMSD.Managers.Account
                     }
 
                     var accountId =
-                        await daprClient.InvokeMethodAsync<AccountIdInfo>(HttpMethod.Get, "userinfoaccessor", $"GetAccountId/email={email}");
+                        await daprClient.InvokeMethodAsync<AccountIdInfo>(HttpMethod.Get, "userinfoaccessor", $"GetAccountIdByEmail?email={email}");
 
                     if (accountId == null)
                     {
@@ -201,7 +210,7 @@ namespace BMSD.Managers.Account
                 {
                     // extract request from the body
                     string requestBody = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
-                    var data = JsonSerializer.Deserialize<Contracts.Requests.AccountTransactionInfo>(requestBody);
+                    var data = JsonSerializer.Deserialize<Contracts.Requests.AccountTransactionInfo>(requestBody, serializeOptions);
 
                     if (data == null)
                     {
@@ -213,7 +222,7 @@ namespace BMSD.Managers.Account
                     if (await RequestAlreadyProcessedAsync(daprClient, data.RequestId))
                     {
                         logger.LogInformation($"Deposit request id {data.RequestId} already processed");
-                        return Results.Problem($"Request id {data.RequestId} already processed");
+                        return Results.Ok($"Request id {data.RequestId} already processed");
                     }
                     //create a customer deposit request for the User accessor
                     var accountTransactionSubmit = mapper.Map<Contracts.Submits.AccountTransactionSubmit>(data);
@@ -245,7 +254,7 @@ namespace BMSD.Managers.Account
                 {
                     // extract request from the body
                     string requestBody = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
-                    var data = JsonSerializer.Deserialize<Contracts.Requests.AccountTransactionInfo>(requestBody);
+                    var data = JsonSerializer.Deserialize<Contracts.Requests.AccountTransactionInfo>(requestBody, serializeOptions);
                     
                     if (data == null || data.AccountId == null)
                     {
@@ -257,7 +266,7 @@ namespace BMSD.Managers.Account
                     if (await RequestAlreadyProcessedAsync(daprClient, data.RequestId))
                     {
                         logger.LogInformation($"Withdraw request id {data.RequestId} already processed");
-                        return Results.Problem($"Request id {data.RequestId} already processed");
+                        return Results.Ok($"Request id {data.RequestId} already processed");
                     }
                     
                     //This is a naive solution, concurrent request may withdraw more monet than allowed

@@ -1,10 +1,13 @@
 using Dapr.Client;
 using System.Net;
 using System.Text.Json.Nodes;
-using Json.Schema;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using NJsonSchema;
+using BMSD.Accessors.UserInfo;
+using System.Text;
 
 namespace BMS.Accessors.UserInfo
 {
@@ -21,8 +24,11 @@ namespace BMS.Accessors.UserInfo
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-            builder.Services.AddControllers().AddDapr();
-            
+            builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+
             var app = builder.Build();
 
             app.UseAuthorization();
@@ -39,10 +45,6 @@ namespace BMS.Accessors.UserInfo
             //Create Cosmos db client using cosmos client builder and camel case serializer
             //Important Security Note: To use CosmosDB emulator we ignore certification checks!!!
             var cosmosClient = new CosmosClientBuilder(cosmosDbConnectionString)
-                .WithSerializerOptions(new CosmosSerializationOptions
-                {
-                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
-                })
                 .WithHttpClientFactory(() =>
                 {
                     HttpMessageHandler httpMessageHandler = new HttpClientHandler()
@@ -52,6 +54,11 @@ namespace BMS.Accessors.UserInfo
                     return new HttpClient(httpMessageHandler);
                 })
                 .WithConnectionModeGateway()
+                .WithCustomSerializer(new CosmosSystemTextJsonSerializer(
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    }))
                 .Build();
 
 
@@ -68,17 +75,19 @@ namespace BMS.Accessors.UserInfo
                     var myQueueItem = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
                     logger.LogInformation($"RegisterCustomer: Queue processed: {myQueueItem}");
 
-                    var customerRegistrationInfo = JsonObject.Parse(myQueueItem)?.AsObject();
+                    await ValidateInputAsync(myQueueItem);
+                    
+                    var customerRegistrationInfo = JsonNode.Parse(myQueueItem);
                     if (customerRegistrationInfo == null)
                     {
                         logger.LogError("RegisterCustomer: Error: invalid customer call: " + myQueueItem);
                         return Results.Problem("RegisterCustomer: Error: invalid customer call");
                     }
-                    ValidateInput(customerRegistrationInfo);
+                   
 
                     userAccountId = customerRegistrationInfo["accountId"]!.ToString();
                     customerRegistrationInfo["id"] = userAccountId;
-                    customerRegistrationInfo.Remove("accountId");
+                    customerRegistrationInfo.AsObject().Remove("accountId");
 
                     //get the requestId from the customerRegistrationInfo
                     requestId = customerRegistrationInfo["requestId"]!.ToString();
@@ -94,7 +103,7 @@ namespace BMS.Accessors.UserInfo
                     //Check if a customer with the user account id is already exist in db
                     var sql = "SELECT * FROM c WHERE c.id = @id";
                     var sqlQuery = new QueryDefinition(sql).WithParameter("@id", userAccountId);
-                    var iterator = container.GetItemQueryIterator<JsonObject>(sqlQuery);
+                    var iterator = container.GetItemQueryIterator<JsonNode>(sqlQuery);
                     var result = await iterator.ReadNextAsync();
                     if (result.Count > 0)
                     {
@@ -203,14 +212,15 @@ namespace BMS.Accessors.UserInfo
                     do
                     {
                         var result = await iterator.ReadNextAsync();
-                        var ids = result.Select(r => "'" + JsonObject.Parse(r.ToString())!["id"]!.ToString() + "'").Cast<string>();
+                        var ids = result.Select(r => "\"" + JsonObject.Parse(r.ToString())!["id"]!.ToString() + "\"").Cast<string>();
                         accountIds.AddRange(ids);
                         charge += result.RequestCharge;
                     } while (iterator.HasMoreResults);
 
                     logger.LogInformation($"GetAccountIdByEmail: Querying for account ids returned {accountIds.Count} accounts and cost {charge} RUs");
-
-                    return Results.Ok(JsonObject.Parse($"{{'accountIds':[{String.Join(',', accountIds)}]}}"));
+                    
+                    var resultJson = $"{{\"accountIds\":[{String.Join(',', accountIds)}]}}";
+                    return Results.Ok(JsonNode.Parse(resultJson));
                 }
                 catch (Exception ex)
                 {
@@ -226,8 +236,8 @@ namespace BMS.Accessors.UserInfo
         {
             return ((int)statusCode >= 200) && ((int)statusCode <= 299);
         }
-
-        private static void ValidateInput(JsonNode customerRegistrationInfo)
+        
+        private static async Task ValidateInputAsync(string customerRegistrationInfo)
         {
             string schemaJson = @"{
                   '$schema' : 'https://json-schema.org/draft/2020-12/schema',
@@ -250,9 +260,10 @@ namespace BMS.Accessors.UserInfo
                 }"
             ;
 
-            JsonSchema schema = JsonSchema.FromText(schemaJson);
+
+            JsonSchema schema = await JsonSchema.FromJsonAsync(schemaJson);
             var validationResult = schema.Validate(customerRegistrationInfo);
-            if (!validationResult.IsValid)
+            if (validationResult.Any())
             {
                 throw new JSchemaValidationException(validationResult);
             }

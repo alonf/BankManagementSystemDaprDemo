@@ -5,6 +5,7 @@ using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
+using System.Text.Json;
 
 namespace BMSD.Accessors.CheckingAccount
 {
@@ -18,7 +19,11 @@ namespace BMSD.Accessors.CheckingAccount
 
             // Add services to the container.
             builder.Services.AddAuthorization();
-            builder.Services.AddControllers().AddDapr();
+            builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+            
             using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
                     .SetMinimumLevel(LogLevel.Trace)
                     .AddConsole());

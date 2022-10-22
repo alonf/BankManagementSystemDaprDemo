@@ -43,7 +43,7 @@ namespace BMSD.Managers.Notification.Controllers
             SignalRMessage message = new()
             {
                 UserId = accountCallbackRequest.CallerId,
-                Target = "accountCallback",
+                Target = "accountcallback",
                 Arguments = new[] { argument }
             };
 

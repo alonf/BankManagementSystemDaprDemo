@@ -1,4 +1,5 @@
-﻿using Json.Schema;
+﻿using NJsonSchema;
+
 using System.Runtime.Serialization;
 
 namespace BMS.Accessors.UserInfo
@@ -6,15 +7,16 @@ namespace BMS.Accessors.UserInfo
     [Serializable]
     internal class JSchemaValidationException : Exception
     {
-        private ValidationResults? validationResult;
+        public ICollection<NJsonSchema.Validation.ValidationError>? ValidationResult { get; private set; }
 
         public JSchemaValidationException()
         {
         }
 
-        public JSchemaValidationException(ValidationResults validationResult)
+        public JSchemaValidationException(ICollection<NJsonSchema.Validation.ValidationError> validationResult) :
+            base(string.Join(Environment.NewLine, validationResult.Select(x => x.ToString())))
         {
-            this.validationResult = validationResult;
+            ValidationResult = validationResult;
         }
 
         public JSchemaValidationException(string? message) : base(message)

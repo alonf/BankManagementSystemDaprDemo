@@ -1,5 +1,6 @@
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace BMS.Engines.LiabilityValidator
@@ -13,8 +14,11 @@ namespace BMS.Engines.LiabilityValidator
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-            builder.Services.AddControllers().AddDapr();
-            
+            builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+
             var app = builder.Build();
 
             app.UseAuthorization();
@@ -48,7 +52,7 @@ namespace BMS.Engines.LiabilityValidator
                     if (getBalanceResult == null)
                         return Results.Problem("Account not found");
 
-                    var getAccountInfoResult = await daprClient.InvokeMethodAsync<JsonObject>("checkingaccountaccessor", $"checkingaccountaccessor/GetAccountInfo?accountId = {accountId}");
+                    var getAccountInfoResult = await daprClient.InvokeMethodAsync<JsonObject>(HttpMethod.Get, "checkingaccountaccessor", $"GetAccountInfo?accountId={accountId}");
 
                     if (getAccountInfoResult == null)
                         return Results.Problem("Account not found");

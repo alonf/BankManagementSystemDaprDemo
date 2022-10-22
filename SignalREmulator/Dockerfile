@@ -16,4 +16,4 @@ RUN asrs-emulator upstream init
 EXPOSE ${ASRS_EMULATOR_PORT}
 
 # start the emulator
-ENTRYPOINT asrs-emulator start --port $ASRS_EMULATOR_PORT
+ENTRYPOINT asrs-emulator start -i 0.0.0.0 --port $ASRS_EMULATOR_PORT

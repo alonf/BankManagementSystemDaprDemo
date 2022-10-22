@@ -18,8 +18,8 @@
         "placement": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging",
         "redis": "StartWithoutDebugging",
-        "signalr": "StartWithoutDebugging",
-        "zipkin": "StartWithoutDebugging"
+        "zipkin": "StartWithoutDebugging",
+        "signalr": "StartWithoutDebugging"
       }
     }
   }

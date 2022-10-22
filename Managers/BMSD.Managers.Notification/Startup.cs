@@ -1,4 +1,6 @@
-﻿namespace BMSD.Managers.Notification
+﻿using System.Text.Json;
+
+namespace BMSD.Managers.Notification
 {
     public class Startup
     {
@@ -12,7 +14,10 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
             services
                 .AddSingleton<SignalRService>()
                 .AddHostedService(sp => sp.GetService<SignalRService>())

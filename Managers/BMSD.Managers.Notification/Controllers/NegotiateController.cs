@@ -20,9 +20,16 @@ namespace BMSD.Managers.Notification.Controllers
             _enableDetailedErrors = configuration.GetValue(EnableDetailedErrors, false);
         }
 
-        [HttpPost("negotiate")]
-        public Task<ActionResult> MessageHubNegotiate(string user)
+        [HttpPost("/negotiate")]
+        public Task<ActionResult> MessageHubNegotiate(/*string user*/)
         {
+            //get the user from the header
+            var user = Request.Headers["x-application-user-id"];
+
+            //throw if the user is not set
+            if (string.IsNullOrEmpty(user))
+                return Task.FromResult<ActionResult>(BadRequest("User is not set in the x-application-user-id header"));
+
             return NegotiateBase(user, _accountManagerCallbackHubContext!);
         }
 

@@ -60,7 +60,7 @@ services:
     ports:
       - "50003:50001"
       - "3501:3500"
-      - "80"
+      - "3502:80"
     depends_on:
       - placement
       - rabbitmq
@@ -70,7 +70,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://bmsd.managers.notification:80
       - ASPNETCORE_ENVIRONMENT=Development  
-      - AZURE__SignalR__ConnectionString=Endpoint=http://signalr;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
+      - AZURE__SignalR__ConnectionString=Endpoint=http://localhost:8888;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
       
   bmsd.managers.notification.dapr:
     image: daprio/dapr:edge
@@ -336,10 +336,10 @@ services:
       - 8888:8888
       - 7071:7071
     volumes:
-     - ./workspace:/workspace
+     - ./workspace:/workspaceS
     environment:
       - ASRS_EMULATOR_PORT=8888
-      - ASPNETCORE_ENVIRONMENT=Development
+#      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8888;http://+:7071
       
 ############################

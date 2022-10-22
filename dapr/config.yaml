@@ -11,4 +11,4 @@ spec:
     expandParams: true
     includeBody: true
     zipkin:
-      endpointAddress: http://host.docker.internal:9411/api/v2/spans
+      endpointAddress: http://zipkin:9411/api/v2/spans

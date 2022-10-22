@@ -259,10 +259,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
+          cpus: '2'
           memory: 4G
     environment:
-      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=20
+      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
       - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
     ports:
        - "8081:8081"

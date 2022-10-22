@@ -70,6 +70,9 @@ public class SignalRWrapper : ISignalRWrapper
         do
         {
             var timeToWait = (int)(timeoutInSeconds - (DateTimeOffset.UtcNow - startTime).TotalSeconds);
+            if (timeToWait <= 0)
+                break;
+            
             await _signalRMessageReceived.WaitAsync(timeToWait * 1000);
         } while (!(result = condition(_signalRMessagesReceived)));
         

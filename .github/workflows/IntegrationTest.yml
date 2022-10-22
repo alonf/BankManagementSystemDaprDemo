@@ -22,7 +22,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     - name: ls
-      run: ls -lR
+      run: ls -l
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:

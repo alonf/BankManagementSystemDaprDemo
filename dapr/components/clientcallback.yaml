@@ -7,6 +7,6 @@ spec:
   version: v1
   metadata:
   - name: connectionString
-    value: Endpoint=http://host.docker.internal:8888;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
+    value: Endpoint=http://signalr:8888;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
   - name: hub 
     value: accountmanagercallback

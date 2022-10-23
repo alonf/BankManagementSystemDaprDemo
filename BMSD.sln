@@ -55,6 +55,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GiHub", "GiHub", "{1F8CC72B-9309-4668-9EE2-AE40AB237B26}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\IntegrationTest.yml = .github\workflows\IntegrationTest.yml
+		.github\workflows\pushDockerImages.yml = .github\workflows\pushDockerImages.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infra", "infra", "{B588CD9E-4FB6-4760-AD77-73A12D424466}"

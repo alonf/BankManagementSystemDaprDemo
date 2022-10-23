@@ -1,0 +1,50 @@
+name: Build & publish docker images
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./Managers/BMSD.Managers.Account/Dockerfile
+            image: bmsdcr.azurecr.io/bmsd.managers.account
+          - dockerfile: ./Managers/BMSD.Managers.Notification/Dockerfile
+            image: bmsdcr.azurecr.io/bmsd.managers.notification
+          - dockerfile: ./Managers/BMSD.Accessors.ChekingAccount/Dockerfile
+            image: bmsdcr.azurecr.io/bmsd.accessors.checkingaccount
+          - dockerfile: ./Managers/BMSD.Accessors.UserInfo/Dockerfile
+            image: bmsdcr.azurecr.io/bmsd.accessors.userinfo
+          - dockerfile: ./Engines/BMSD.Engines.LiabilityValidator/Dockerfile
+            image: bmsdcr.azurecr.io/bmsd.engines.liabilityvalidator
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          login-server: bmsdcr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ matrix.image }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./backend
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          

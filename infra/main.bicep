@@ -84,7 +84,7 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
 	 collectionName : 'statestore'
 	 environmentName: environmentName
 	 appScope: [
-	'BMSDAccountManagerServiceContainerAppName'
+	'${BMSDAccountManagerServiceContainerAppName}'
 	]
   }
 }

@@ -4,9 +4,9 @@ services:
 ###################################################
 # Notification Manager Microservice + Dapr sidecar
 ###################################################
-#  bmsd.managers.notification:
-#    environment: 
-#      - AZURE__SignalR__ConnectionString=${SignalRConnectionString}
+  bmsd.managers.notification:
+    environment: 
+      - AZURE__SignalR__ConnectionString=${SignalRConnectionString}
       
  
 #################################################

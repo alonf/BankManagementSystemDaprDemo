@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", 
 		Dapr\components\clientcallback.yaml = Dapr\components\clientcallback.yaml
 		Dapr\components\clientresponsequeue.yaml = Dapr\components\clientresponsequeue.yaml
 		Dapr\components\customerregistrationqueue.yaml = Dapr\components\customerregistrationqueue.yaml
+		dapr\components\dapr-secretstore.json = dapr\components\dapr-secretstore.json
 		Dapr\components\processedrequests.yaml = Dapr\components\processedrequests.yaml
+		dapr\components\secretstore.yaml = dapr\components\secretstore.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMSD.Managers.Account", "Managers\BMSD.Managers.Account\BMSD.Managers.Account.csproj", "{408EA9D2-5983-4147-87B0-EA37B1E4976E}"

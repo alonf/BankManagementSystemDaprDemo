@@ -7,6 +7,10 @@ spec:
   version: v1
   metadata:
   - name: connectionString
-    value: Endpoint=http://host.docker.internal:8888;Port=8888;AccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGH;Version=1.0;
+    secretKeyRef:
+      name: SignalRConnectionString
+      key: SignalRConnectionString
   - name: hub 
     value: accountmanagercallback
+auth:
+  secretStore: local-secret-store

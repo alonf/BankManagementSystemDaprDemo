@@ -12,7 +12,6 @@ services:
     ports:
       - "50010:50001"
       - "3500:3500"
-#      - "5008:80"
     depends_on:
       - redis
       - placement
@@ -60,7 +59,6 @@ services:
     ports:
       - "50003:50001"
       - "3501:3500"
-      - "3502:80"
     depends_on:
       - placement
       - rabbitmq

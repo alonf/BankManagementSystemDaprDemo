@@ -18,7 +18,6 @@ public class SignalRWrapper : ISignalRWrapper
         if (string.IsNullOrEmpty(signalRUrl))
         {
               signalRUrl = "http://localhost:3501/v1.0/invoke/notificationmanager/method";
-              //signalRUrl = "http://localhost:3502/";
         }
 
         _signalRHubConnection = new HubConnectionBuilder()

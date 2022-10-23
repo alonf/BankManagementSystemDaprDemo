@@ -27,12 +27,13 @@ jobs:
         dotnet-version: |
           6.0.x
     - name: use cloud resources for signalr and cosmos db
-      run: sed -i 's/Endpoint.*$/${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}/ dapr/components/clientcallback.yaml
-           echo ***** dapr/components/clientcallback.yaml *****
-           cat dapr/components/clientcallback.yml
-           sed -i 's/CosmosDbConnectionString.*$/CosmosDbConnectionString=${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}/ docker-compose.yml
-           echo ***** docker-compose.yml *****
-           cat docker-compose.yml
+      run:  |
+        sed -i 's/Endpoint.*$/${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}/ dapr/components/clientcallback.yaml
+        echo ***** dapr/components/clientcallback.yaml *****
+        cat dapr/components/clientcallback.yml
+        sed -i 's/CosmosDbConnectionString.*$/CosmosDbConnectionString=${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}/ docker-compose.yml
+        echo ***** docker-compose.yml *****
+        cat docker-compose.yml
            
     - name: Docker Compose Up
       run: docker compose up -d

@@ -26,7 +26,7 @@ jobs:
     - name: change signalr dapr secret store file to use Azure
       run: |
             rm ./dapr/components/dapr-secretstore.json
-            echo "{\"AzureSignalRConnectionString\": \"${{ secrets.BMSD_SIGNALR_CONNECTION_STRING }}\"}" > ./dapr/components/dapr-secretstore.json
+            echo "{\"SignalRConnectionString\": \"${{ secrets.BMSD_SIGNALR_CONNECTION_STRING }}\"}" > ./dapr/components/dapr-secretstore.json
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:

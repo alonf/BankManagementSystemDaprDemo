@@ -25,8 +25,14 @@ jobs:
       with:
         dotnet-version: |
           6.0.x
-    - name: fix the unsupported host.docker.internal host ip address
-      run: ip=`/sbin/ip route|awk '/default/ { print $3 }'` && sed -i 's/host\.docker\.internal/'$ip/ dapr/components/clientcallback.yaml
+    - name: use cloud resources for signalr and cosmos db
+      run: sed -i 's/Endpoint.*$/${{secrets.BMSDCALLERNOTIFICATIONCONNECTIONSTRING}}/ dapr/components/clientcallback.yaml
+           echo ***** dapr/components/clientcallback.yaml *****
+           cat dapr/components/clientcallback.yml
+           sed -i 's/CosmosDbConnectionString.*$/CosmosDbConnectionString=${{secrets.BMSDCOSMOSDBCONNECTIONSTRING}}/ docker-compose.yml
+           echo ***** docker-compose.yml *****
+           cat docker-compose.yml
+           
     - name: Docker Compose Up
       run: docker compose up -d
     - name: Restore dependencies

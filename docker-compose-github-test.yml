@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+###################################################
+# Notification Manager Microservice + Dapr sidecar
+###################################################
+#  bmsd.managers.notification:
+#    environment: 
+#      - AZURE__SignalR__ConnectionString=${SignalRConnectionString}
+      
+ 
+#################################################
+# User Info Accessor Microservice + Dapr sidecar
+################################################# 
+  bmsd.accessors.userinfo:
+    environment:
+      - CosmosDbConnectionString=${CosmosDbConnectionString}
+      
+ 

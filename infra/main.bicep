@@ -213,27 +213,27 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
       }
       probes: [
         {
-          "type": "liveness",
-          "failureThreshold": 3,
-          "periodSeconds": 10,
-          "initialDelaySeconds": 15,
-          "successThreshold": 1,
-          "tcpSocket": {
-            "port": 80
-          },
-          "timeoutSeconds": 1
-         },
-         {
-           "type": "readiness",
-           "failureThreshold": 48,
-           "initialDelaySeconds": 15,
-           "periodSeconds": 5,
-           "successThreshold": 1,
-           "tcpSocket": {
-             "port": 80
-            },
-            "timeoutSeconds": 5
-         }
+          type: 'liveness'
+          failureThreshold: 3
+          periodSeconds: 10
+          initialDelaySeconds: 15
+          successThreshold: 1
+          tcpSocket: {
+            port: 80
+          }
+          timeoutSeconds: 1
+        }
+        {
+          type: 'readiness'
+          failureThreshold: 48
+          initialDelaySeconds: 15
+          periodSeconds: 5,
+          successThreshold: 1
+          tcpSocket: {
+             port: 80
+          }
+             timeoutSeconds: 5
+        }
       ]
     }
     template: {
@@ -332,27 +332,27 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
       }
       probes: [
         {
-          "type": "liveness",
-          "failureThreshold": 3,
-          "periodSeconds": 10,
-          "initialDelaySeconds": 15,
-          "successThreshold": 1,
-          "tcpSocket": {
-            "port": 80
-          },
-          "timeoutSeconds": 1
-         },
-         {
-           "type": "readiness",
-           "failureThreshold": 48,
-           "initialDelaySeconds": 15,
-           "periodSeconds": 5,
-           "successThreshold": 1,
-           "tcpSocket": {
-             "port": 80
-            },
-            "timeoutSeconds": 5
-         }
+          type: 'liveness'
+          failureThreshold: 3
+          periodSeconds: 10
+          initialDelaySeconds: 15
+          successThreshold: 1
+          tcpSocket: {
+            port: 80
+          }
+          timeoutSeconds: 1
+        }
+        {
+          type: 'readiness'
+          failureThreshold: 48
+          initialDelaySeconds: 15
+          periodSeconds: 5,
+          successThreshold: 1
+          tcpSocket: {
+             port: 80
+          }
+             timeoutSeconds: 5
+        }
       ]
     }
     template: {
@@ -450,27 +450,27 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
       }
       probes: [
         {
-          "type": "liveness",
-          "failureThreshold": 3,
-          "periodSeconds": 10,
-          "initialDelaySeconds": 15,
-          "successThreshold": 1,
-          "tcpSocket": {
-            "port": 80
-          },
-          "timeoutSeconds": 1
-         },
-         {
-           "type": "readiness",
-           "failureThreshold": 48,
-           "initialDelaySeconds": 15,
-           "periodSeconds": 5,
-           "successThreshold": 1,
-           "tcpSocket": {
-             "port": 80
-            },
-            "timeoutSeconds": 5
-         }
+          type: 'liveness'
+          failureThreshold: 3
+          periodSeconds: 10
+          initialDelaySeconds: 15
+          successThreshold: 1
+          tcpSocket: {
+            port: 80
+          }
+          timeoutSeconds: 1
+        }
+        {
+          type: 'readiness'
+          failureThreshold: 48
+          initialDelaySeconds: 15
+          periodSeconds: 5,
+          successThreshold: 1
+          tcpSocket: {
+             port: 80
+          }
+             timeoutSeconds: 5
+        }
       ]
     }
     template: {
@@ -545,27 +545,27 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
       }
       probes: [
         {
-          "type": "liveness",
-          "failureThreshold": 3,
-          "periodSeconds": 10,
-          "initialDelaySeconds": 15,
-          "successThreshold": 1,
-          "tcpSocket": {
-            "port": 80
-          },
-          "timeoutSeconds": 1
-         },
-         {
-           "type": "readiness",
-           "failureThreshold": 48,
-           "initialDelaySeconds": 15,
-           "periodSeconds": 5,
-           "successThreshold": 1,
-           "tcpSocket": {
-             "port": 80
-            },
-            "timeoutSeconds": 5
-         }
+          type: 'liveness'
+          failureThreshold: 3
+          periodSeconds: 10
+          initialDelaySeconds: 15
+          successThreshold: 1
+          tcpSocket: {
+            port: 80
+          }
+          timeoutSeconds: 1
+        }
+        {
+          type: 'readiness'
+          failureThreshold: 48
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket: {
+             port: 80
+          }
+             timeoutSeconds: 5
+        }
       ]
     }
     template: {
@@ -646,27 +646,27 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
       }
       probes: [
         {
-          "type": "liveness",
-          "failureThreshold": 3,
-          "periodSeconds": 10,
-          "initialDelaySeconds": 15,
-          "successThreshold": 1,
-          "tcpSocket": {
-            "port": 80
-          },
-          "timeoutSeconds": 1
-         },
-         {
-           "type": "readiness",
-           "failureThreshold": 48,
-           "initialDelaySeconds": 15,
-           "periodSeconds": 5,
-           "successThreshold": 1,
-           "tcpSocket": {
-             "port": 80
-            },
-            "timeoutSeconds": 5
-         }
+          type: 'liveness'
+          failureThreshold: 3
+          periodSeconds: 10
+          initialDelaySeconds: 15
+          successThreshold: 1
+          tcpSocket: {
+            port: 80
+          }
+          timeoutSeconds: 1
+        }
+        {
+          type: 'readiness'
+          failureThreshold: 48
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket: {
+             port: 80
+          }
+             timeoutSeconds: 5
+        }
       ]
     }
     template: {

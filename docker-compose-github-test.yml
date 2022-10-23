@@ -16,4 +16,9 @@ services:
     environment:
       - CosmosDbConnectionString=${CosmosDbConnectionString}
       
- 
+########################################################
+# Checking Account Accessor Microservice + Dapr sidecar
+######################################################## 
+  bmsd.accessors.checkingaccount:
+environment:
+      - CosmosDbConnectionString=${CosmosDbConnectionString}

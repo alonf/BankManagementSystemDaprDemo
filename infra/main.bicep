@@ -1,4 +1,5 @@
 param branchName string
+param cosmosDBDatabaseName string
 
 @secure()
 param containerRegistryPassword string
@@ -9,8 +10,6 @@ param cosmosDBConnectionString string
 @secure()
 param cosmosDBKey string
 
-@secure()
-param cosmosDBDatabaseName string
 
 param tags object = {}
 

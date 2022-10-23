@@ -227,7 +227,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
           type: 'readiness'
           failureThreshold: 48
           initialDelaySeconds: 15
-          periodSeconds: 5,
+          periodSeconds: 5
           successThreshold: 1
           tcpSocket: {
              port: 80
@@ -346,7 +346,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
           type: 'readiness'
           failureThreshold: 48
           initialDelaySeconds: 15
-          periodSeconds: 5,
+          periodSeconds: 5
           successThreshold: 1
           tcpSocket: {
              port: 80
@@ -464,7 +464,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
           type: 'readiness'
           failureThreshold: 48
           initialDelaySeconds: 15
-          periodSeconds: 5,
+          periodSeconds: 5
           successThreshold: 1
           tcpSocket: {
              port: 80

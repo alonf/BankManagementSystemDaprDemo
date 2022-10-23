@@ -14,7 +14,7 @@ public class SignalRWrapper : ISignalRWrapper
 
     public SignalRWrapper(ITestOutputHelper testOutputHelper)
     {
-        var signalRUrl = Environment.GetEnvironmentVariable("BMS_SIGNALR_URL");
+        var signalRUrl = Environment.GetEnvironmentVariable("BMSD_SIGNALR_URL");
         if (string.IsNullOrEmpty(signalRUrl))
         {
               signalRUrl = "http://localhost:3502/";

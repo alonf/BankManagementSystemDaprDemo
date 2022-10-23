@@ -1,0 +1,31 @@
+name: Containers App Integration Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      signalr_url:
+        description: 'The SignalR Client Negotiate Url'
+        required: true
+      account_manager_url:
+        description: 'The Account Manager Service Url'
+        required: true 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: |
+          6.0.x
+    - name: Test
+      env:
+        BMSD_SIGNALR_URL: ${{ github.event.inputs.signalr_url }}
+        ACCOUNT_MANAGER_URL: ${{ github.event.inputs.account_manager_url }}
+      run: dotnet test --no-build --verbosity normal --configuration Debug Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
+    

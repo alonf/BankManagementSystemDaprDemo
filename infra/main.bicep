@@ -15,9 +15,6 @@ param cosmosDBConnectionString string
 @secure()
 param cosmosDBKey string
 
-param containerRegistry string
-param containerRegistryUsername string
-
 param tags object = {}
 
 param location string = resourceGroup().location

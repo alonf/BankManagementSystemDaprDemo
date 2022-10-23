@@ -28,11 +28,11 @@ jobs:
           6.0.x
     - name: use cloud resources for signalr and cosmos db
       run:  |
-        echo ${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}
-        sed -i s/Endpoint.+/${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}/ dapr/components/clientcallback.yaml
+        echo ${{secrets.BMSD_SIGNALR_CONNECTION_STRING}} | sed 's/./& /g'
+        sed -i s/Endpoint.+/\"${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}\"/ dapr/components/clientcallback.yaml
         echo ***** dapr/components/clientcallback.yaml *****
         cat dapr/components/clientcallback.yml
-        sed -i s/CosmosDbConnectionString.+/CosmosDbConnectionString=${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}/g docker-compose.yml
+        sed -i s/CosmosDbConnectionString.+/CosmosDbConnectionString=\"${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}\"/g docker-compose.yml
         echo ***** docker-compose.yml *****
         cat docker-compose.yml
            

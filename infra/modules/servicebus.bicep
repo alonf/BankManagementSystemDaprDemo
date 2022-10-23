@@ -3,9 +3,9 @@ param skuName string = 'Standard'
 param location string
 
 param queueNames array = [
-  'accounttransaction'
-  'clientresponse'
-  'customerregistration'
+  'accounttransactionqueue'
+  'clientresponsequeue'
+  'customerregistrationqueue'
 ]
 
 var deadLetterFirehoseQueueName = 'deadletterfirehose'

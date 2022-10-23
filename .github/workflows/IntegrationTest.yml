@@ -31,7 +31,7 @@ jobs:
         sed -i 's/Endpoint.*$/'${{secrets.BMSD_SIGNALR_CONNECTION_STRING}}/ dapr/components/clientcallback.yaml
         echo ***** dapr/components/clientcallback.yaml *****
         cat dapr/components/clientcallback.yml
-        sed -i 's/CosmosDbConnectionString.*$'/CosmosDbConnectionString=${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}/ docker-compose.yml
+        sed -i s/CosmosDbConnectionString.+$/CosmosDbConnectionString=${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}/g docker-compose.yml
         echo ***** docker-compose.yml *****
         cat docker-compose.yml
            

@@ -59,6 +59,7 @@ services:
     ports:
       - "50003:50001"
       - "3501:3500"
+      - "3502:80"
     depends_on:
       - placement
       - rabbitmq

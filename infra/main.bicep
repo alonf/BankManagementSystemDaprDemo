@@ -226,6 +226,10 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
               name: 'ASPNETCORE_URLS'
               value: 'http://localhost:80'
             }
+			{
+              name: 'Liat'
+              value: 'Alon'
+            }
             {
               name: 'CosmosDbConnectionString'
               value: cosmosDBConnectionString

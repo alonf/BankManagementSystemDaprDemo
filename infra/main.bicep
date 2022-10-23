@@ -50,7 +50,7 @@ var branch = toLower(last(split(branchName, '/')))
 
 var signalRName = '${branch}-bmsd-signalr'
 
-var environmentName = 'shared-env'
+var environmentName = 'BankManagementSystemDemo'
 var workspaceName = '${branch}-log-analytics'
 var appInsightsName = '${branch}-app-insights'
 var BMSDAccountManagerServiceContainerAppName = 'accountmanager' 

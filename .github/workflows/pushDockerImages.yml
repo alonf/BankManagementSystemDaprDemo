@@ -16,7 +16,7 @@ jobs:
             image: bmsdcr.azurecr.io/bmsd.managers.account
           - dockerfile: ./Managers/BMSD.Managers.Notification/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.managers.notification
-          - dockerfile: ./Accessors/BMSD.Accessors.ChekingAccount/Dockerfile
+          - dockerfile: ./Accessors/BMSD.Accessors.CheckingAccount/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.accessors.checkingaccount
           - dockerfile: ./Accessors/BMSD.Accessors.UserInfo/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.accessors.userinfo

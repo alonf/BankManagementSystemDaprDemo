@@ -486,6 +486,10 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
               name: 'ASPNETCORE_URLS'
               value: 'http://localhost:80'
             }
+			{
+              name: 'AZURE__SignalR__ConnectionString'
+              value: signalrKey
+            }
           ]
         }
       ]

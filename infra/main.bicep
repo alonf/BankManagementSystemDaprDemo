@@ -227,7 +227,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
               value: 'http://localhost:80'
             }
             {
-              name: 'ConnectionStrings__CosmosDB'
+              name: 'CosmosDbConnectionString'
               value: cosmosDBConnectionString
             }
           ]
@@ -322,7 +322,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
               value: 'http://localhost:80'
             }
             {
-              name: 'ConnectionStrings__CosmosDB'
+              name: 'CosmosDbConnectionString'
               value: cosmosDBConnectionString
             }
           ]
@@ -414,10 +414,6 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
             {
               name: 'ASPNETCORE_URLS'
               value: 'http://localhost:80'
-            }
-            {
-              name: 'ConnectionStrings__CosmosDB'
-              value: cosmosDBConnectionString
             }
           ]
         }

@@ -6,12 +6,12 @@ param containerRegistry string
 @secure()
 param containerRegistryUsername string
 
+@secure()
+param cosmosDBConnectionString string
 
 @secure()
 param containerRegistryPassword string
 
-@secure()
-param cosmosDBConnectionString string
 
 @secure()
 param cosmosDBKey string
@@ -228,7 +228,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
             }
             {
               name: 'CosmosDbConnectionString'
-              value: '${cosmosDBConnectionString}'
+              value: cosmosDBConnectionString
             }
           ]
         }
@@ -323,7 +323,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
             }
             {
               name: 'CosmosDbConnectionString'
-			  value: '${cosmosDBConnectionString}'
+			  value: cosmosDBConnectionString
             }
           ]
         }

@@ -1,5 +1,5 @@
 param branchName string
-param cosmosDbUrl
+param cosmosDbUrl string
 param cosmosDBDatabaseName string
 param containerRegistry string
 

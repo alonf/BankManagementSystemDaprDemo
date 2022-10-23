@@ -20,5 +20,5 @@ services:
 # Checking Account Accessor Microservice + Dapr sidecar
 ######################################################## 
   bmsd.accessors.checkingaccount:
-environment:
+    environment:
       - CosmosDbConnectionString=${CosmosDbConnectionString}

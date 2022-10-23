@@ -21,5 +21,13 @@ jobs:
         inlineScript: |
           az account show
           az group create --name bmsd-cont-app-rg --location eastus2
-          az deployment group create --resource-group bmsd-cont-app-rg --template-file infra/main.bicep --parameters branchName='master' containerRegistryPassword="${{secrets.ACR_PASSWORD}}" cosmosDBConnectionString="${{secrets.COSMOSDB_CONNECTION_STRING}}" cosmosDBKey="${{secrets.COSMOSDB_KEY}}" cosmosDBDatabaseName=BMSDB
+          az deployment group create --resource-group bmsd-cont-app-rg --template-file infra/main.bicep \
+            --parameters branchName='master' \
+            containerRegistry='bmsdcr' \
+            containerRegistryUsername="${{secrets.ACR_USERNAME}}" \
+            containerRegistryPassword="${{secrets.ACR_PASSWORD}}" \
+            cosmosDBConnectionString="${{secrets.COSMOSDB_CONNECTION_STRING}}" \
+            cosmosDBKey="${{secrets.COSMOSDB_KEY}}" \
+            cosmosDBDatabaseName=BMSDB \
+            
           

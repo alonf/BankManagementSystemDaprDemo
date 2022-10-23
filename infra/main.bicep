@@ -1,5 +1,10 @@
 param branchName string
 param cosmosDBDatabaseName string
+param containerRegistry string
+
+@secure()
+param containerRegistryUsername string
+
 
 @secure()
 param containerRegistryPassword string
@@ -10,6 +15,8 @@ param cosmosDBConnectionString string
 @secure()
 param cosmosDBKey string
 
+param containerRegistry string
+param containerRegistryUsername string
 
 param tags object = {}
 
@@ -36,8 +43,7 @@ var BMSDLiabilityValidatorEnginePort = 80
 var BMSDLiabilityValidatorEngineIsExternalIngress = false
 
 
-var containerRegistry  = 'bmsdacr.azurecr.io'
-var containerRegistryUsername = 'bmsdacr'
+
 
 var minReplicas = 0
 var maxReplicas = 1

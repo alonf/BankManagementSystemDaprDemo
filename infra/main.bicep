@@ -1,4 +1,5 @@
 param branchName string
+param cosmosDbUrl
 param cosmosDBDatabaseName string
 param containerRegistry string
 
@@ -79,6 +80,7 @@ var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
 module stateStore 'modules/dapr-component-statestore.bicep' = {
   name: 'cosmosDBStateStoreDeployment'
   params: {
+     cosmosDbUrl : cosmosDbUrl
      masterKey : cosmosDBKey
 	 databaseName : cosmosDBDatabaseName
 	 collectionName : 'statestore'

@@ -1,4 +1,5 @@
 param environmentName string
+param cosmosDbUrl string
 param masterKey string
 param databaseName string
 param collectionName string
@@ -10,6 +11,10 @@ resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponen
     componentType: 'state.azure.cosmosdb'
     version: 'v1'
     metadata: [
+      {
+        name: 'url'
+        value: cosmosDbUrl
+      }
       {
         name: 'masterKey'
         value: masterKey

@@ -23,7 +23,7 @@ jobs:
           az group create --name bmsd-cont-app-rg --location eastus2
           az deployment group create --resource-group bmsd-cont-app-rg --template-file infra/main.bicep \
             --parameters branchName='master' \
-            containerRegistry='bmsdcr' \
+            containerRegistry='bmsdcr.azurecr.io' \
             containerRegistryUsername="${{secrets.ACR_USERNAME}}" \
             containerRegistryPassword="${{secrets.ACR_PASSWORD}}" \
             cosmosDBConnectionString="${{secrets.COSMOSDB_CONNECTION_STRING}}" \

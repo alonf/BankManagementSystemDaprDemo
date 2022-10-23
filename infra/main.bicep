@@ -79,6 +79,10 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
      masterKey : cosmosDBKey
 	 databaseName : cosmosDBDatabaseName
 	 collectionName : 'statestore'
+	 environmentName: environmentName
+	 appScope: [
+	'BMSDAccountManagerServiceContainerAppName'
+	]
   }
 }
 

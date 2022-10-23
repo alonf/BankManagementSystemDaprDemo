@@ -211,6 +211,30 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
         external: BMSDCheckingAccountAccessorIsExternalIngress
         targetPort: BMSDCheckingAccountAccessorPort
       }
+      probes: [
+        {
+          "type": "liveness",
+          "failureThreshold": 3,
+          "periodSeconds": 10,
+          "initialDelaySeconds": 15,
+          "successThreshold": 1,
+          "tcpSocket": {
+            "port": 80
+          },
+          "timeoutSeconds": 1
+         },
+         {
+           "type": "readiness",
+           "failureThreshold": 48,
+           "initialDelaySeconds": 15,
+           "periodSeconds": 5,
+           "successThreshold": 1,
+           "tcpSocket": {
+             "port": 80
+            },
+            "timeoutSeconds": 5
+         }
+      ]
     }
     template: {
       containers: [
@@ -306,6 +330,30 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
         external: BMSDUserInfoAccessorIsExternalIngress
         targetPort: BMSDUserInfoAccessorPort
       }
+      probes: [
+        {
+          "type": "liveness",
+          "failureThreshold": 3,
+          "periodSeconds": 10,
+          "initialDelaySeconds": 15,
+          "successThreshold": 1,
+          "tcpSocket": {
+            "port": 80
+          },
+          "timeoutSeconds": 1
+         },
+         {
+           "type": "readiness",
+           "failureThreshold": 48,
+           "initialDelaySeconds": 15,
+           "periodSeconds": 5,
+           "successThreshold": 1,
+           "tcpSocket": {
+             "port": 80
+            },
+            "timeoutSeconds": 5
+         }
+      ]
     }
     template: {
       containers: [
@@ -400,6 +448,30 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
         external: BMSDLiabilityValidatorEngineIsExternalIngress
         targetPort: BMSDLiabilityValidatorEnginePort
       }
+      probes: [
+        {
+          "type": "liveness",
+          "failureThreshold": 3,
+          "periodSeconds": 10,
+          "initialDelaySeconds": 15,
+          "successThreshold": 1,
+          "tcpSocket": {
+            "port": 80
+          },
+          "timeoutSeconds": 1
+         },
+         {
+           "type": "readiness",
+           "failureThreshold": 48,
+           "initialDelaySeconds": 15,
+           "periodSeconds": 5,
+           "successThreshold": 1,
+           "tcpSocket": {
+             "port": 80
+            },
+            "timeoutSeconds": 5
+         }
+      ]
     }
     template: {
       containers: [
@@ -471,6 +543,30 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
         external: BMSDNotificationManagerIsExternalIngress
         targetPort: BMSDNotificationManagerPort
       }
+      probes: [
+        {
+          "type": "liveness",
+          "failureThreshold": 3,
+          "periodSeconds": 10,
+          "initialDelaySeconds": 15,
+          "successThreshold": 1,
+          "tcpSocket": {
+            "port": 80
+          },
+          "timeoutSeconds": 1
+         },
+         {
+           "type": "readiness",
+           "failureThreshold": 48,
+           "initialDelaySeconds": 15,
+           "periodSeconds": 5,
+           "successThreshold": 1,
+           "tcpSocket": {
+             "port": 80
+            },
+            "timeoutSeconds": 5
+         }
+      ]
     }
     template: {
       containers: [
@@ -548,6 +644,30 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
       }
+      probes: [
+        {
+          "type": "liveness",
+          "failureThreshold": 3,
+          "periodSeconds": 10,
+          "initialDelaySeconds": 15,
+          "successThreshold": 1,
+          "tcpSocket": {
+            "port": 80
+          },
+          "timeoutSeconds": 1
+         },
+         {
+           "type": "readiness",
+           "failureThreshold": 48,
+           "initialDelaySeconds": 15,
+           "periodSeconds": 5,
+           "successThreshold": 1,
+           "tcpSocket": {
+             "port": 80
+            },
+            "timeoutSeconds": 5
+         }
+      ]
     }
     template: {
       containers: [

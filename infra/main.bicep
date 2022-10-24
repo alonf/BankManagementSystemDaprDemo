@@ -642,6 +642,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
       }
+    }
     template: {
       containers: [
         {

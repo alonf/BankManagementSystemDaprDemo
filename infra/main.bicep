@@ -612,7 +612,7 @@ var environmentId = containersAppInfra.outputs.environmentId
 //}
 
 
-resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
   name: BMSDAccountManagerServiceContainerAppName
   tags: tags
   location: location

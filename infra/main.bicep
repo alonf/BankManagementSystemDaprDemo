@@ -649,7 +649,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
           resources: {
-            cpu: '0.5'
+            cpu: json('0.5')
             memory: '1Gi'
           }         
           env: [

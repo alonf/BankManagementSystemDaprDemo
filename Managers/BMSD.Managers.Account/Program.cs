@@ -14,16 +14,6 @@ namespace BMSD.Managers.Account
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new()
-                {
-                    Title = builder.Environment.ApplicationName,
-                    Version = "v1"
-                });
-            });
-
             // Add services to the container.
             builder.Services.AddAuthorization();
             builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
@@ -31,27 +21,21 @@ namespace BMSD.Managers.Account
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
-            try
-            {
-                var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMappingProfile()); });
-                IMapper mapper = mapperConfig.CreateMapper();
-                mapperConfig.AssertConfigurationIsValid();
-                builder.Services.AddSingleton(mapper);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                throw;
-            }
+            //try
+            //{
+            //    var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMappingProfile()); });
+            //    IMapper mapper = mapperConfig.CreateMapper();
+            //    mapperConfig.AssertConfigurationIsValid();
+            //    builder.Services.AddSingleton(mapper);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.ToString());
+            //    throw;
+            //}
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                                                $"{builder.Environment.ApplicationName} v1"));
-            }
 
             // Configure the HTTP request pipeline.
             app.UseHttpsRedirection();

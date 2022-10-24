@@ -61,7 +61,11 @@ namespace BMS.Accessors.UserInfo
                     }))
                 .Build();
 
-
+            app.MapGet("/liveness", async (HttpContext httpContext) =>
+            {
+                await httpContext.Response.WriteAsync("OK");
+            });
+            
             //Register Customer
             app.MapPost("/customerregistrationqueue", async (HttpContext httpContext,
                     [FromServices] DaprClient daprClient, [FromServices] ILogger<UserInfoAccessor> logger) =>

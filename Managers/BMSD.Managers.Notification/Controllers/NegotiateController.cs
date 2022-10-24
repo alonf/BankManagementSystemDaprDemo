@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,12 @@ namespace BMSD.Managers.Notification.Controllers
             return NegotiateBase(user, _accountManagerCallbackHubContext!);
         }
 
+        [HttpGet("/liveness")]
+        public Task<ActionResult> Liveness()
+        {
+            return Task.FromResult<ActionResult>(Ok());
+        }
+        
         
         private async Task<ActionResult> NegotiateBase(string user, ServiceHubContext serviceHubContext)
         {

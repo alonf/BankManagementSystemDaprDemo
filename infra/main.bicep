@@ -41,8 +41,6 @@ var BMSDLiabilityValidatorEnginePort = 80
 var BMSDLiabilityValidatorEngineIsExternalIngress = false
 
 
-
-
 var minReplicas = 0
 var maxReplicas = 1
 
@@ -611,7 +609,6 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
     signalr
   ]
 }
-
 
 
 resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01' = {

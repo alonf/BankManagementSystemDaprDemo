@@ -62,7 +62,12 @@ namespace BMSD.Managers.Account
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
-            
+
+            app.MapGet("/liveness", async (HttpContext httpContext) =>
+            {
+                await httpContext.Response.WriteAsync("OK");
+            });
+
             app.MapPost("/RegisterCustomer", async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             {
                 logger.LogInformation("HTTP trigger RegisterCustomer");

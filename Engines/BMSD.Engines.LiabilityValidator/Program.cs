@@ -23,7 +23,11 @@ namespace BMS.Engines.LiabilityValidator
 
             app.UseAuthorization();
 
-
+            app.MapGet("/liveness", async (HttpContext httpContext) =>
+            {
+                await httpContext.Response.WriteAsync("OK");
+            });
+            
             app.MapGet("/CheckLiability", async (HttpContext httpContext, [FromServices] DaprClient daprClient,
                 [FromServices] IConfiguration configuration, [FromServices] ILogger<LiabilityValidatorEngine> logger) =>
             {

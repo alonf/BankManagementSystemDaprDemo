@@ -40,14 +40,6 @@ resource queues 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue
   }
 }]
 
-resource pubsub 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
-  parent: serviceBusNamespace
-  name: 'pubsub'
-  properties: {
-    defaultMessageTimeToLive:'PT1M' //1 minute
-  }
-}
-
 var serviceBusEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var conStr =  listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 output serviceBusConnectionString string = conStr

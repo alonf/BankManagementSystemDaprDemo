@@ -78,6 +78,7 @@ var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
 module stateStore 'modules/dapr-component-statestore.bicep' = {
   name: 'cosmosDBStateStoreDeployment'
   params: {
+     statestoreName: 'processedrequests'
      cosmosDbUrl : cosmosDbUrl
      masterKey : cosmosDBKey
 	 databaseName : cosmosDBDatabaseName

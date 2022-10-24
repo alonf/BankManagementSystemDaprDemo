@@ -13,7 +13,8 @@ namespace BMSD.Managers.Account
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddHealthChecks();
+            
             // Add services to the container.
             builder.Services.AddAuthorization();
             builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
@@ -36,6 +37,8 @@ namespace BMSD.Managers.Account
 
             var app = builder.Build();
 
+            app.MapHealthChecks("/healthz");
+            
             app.UseAuthorization();
 
             
@@ -46,7 +49,7 @@ namespace BMSD.Managers.Account
             };
 
             //endpoint for simple liveness check
-            app.MapGet("/hello", async (HttpContext httpContext) =>
+            app.MapGet("/Test", async (HttpContext httpContext) =>
             {
                 var response = new
                 {

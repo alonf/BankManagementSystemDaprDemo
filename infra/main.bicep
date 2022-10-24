@@ -642,31 +642,6 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
       }
-      probes: [
-        {
-          type: 'liveness'
-          failureThreshold: 3
-          periodSeconds: 10
-          initialDelaySeconds: 15
-          successThreshold: 1
-          tcpSocket: {
-            port: 80
-          }
-          timeoutSeconds: 1
-        }
-        {
-          type: 'readiness'
-          failureThreshold: 48
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          successThreshold: 1
-          tcpSocket: {
-             port: 80
-          }
-             timeoutSeconds: 5
-        }
-      ]
-    }
     template: {
       containers: [
         {

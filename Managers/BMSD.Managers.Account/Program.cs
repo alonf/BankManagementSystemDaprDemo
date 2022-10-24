@@ -63,10 +63,16 @@ namespace BMSD.Managers.Account
                 WriteIndented = true
             };
 
-            app.MapGet("/liveness", async (HttpContext httpContext) =>
+            //endpoint for simple liveness check
+            app.MapGet("/hello", async (HttpContext httpContext) =>
             {
-                await httpContext.Response.WriteAsync("OK");
+                var response = new
+                {
+                    Message = "Hello from Account Manager"
+                };
+                await httpContext.Response.WriteAsJsonAsync(response, serializeOptions);
             });
+        
 
             //app.MapPost("/RegisterCustomer", async (HttpContext httpContext, [FromServices] ILogger<AccountManager> logger, [FromServices] DaprClient daprClient, [FromServices] IMapper mapper) =>
             //{

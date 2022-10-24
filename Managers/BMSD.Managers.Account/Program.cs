@@ -36,11 +36,9 @@ namespace BMSD.Managers.Account
 
             var app = builder.Build();
 
-
-            // Configure the HTTP request pipeline.
-            app.UseHttpsRedirection();
             app.UseAuthorization();
 
+            
             var serializeOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -298,31 +296,31 @@ namespace BMSD.Managers.Account
             app.Run();
         }
 
-        private static async Task<bool> RequestAlreadyProcessedAsync(DaprClient daprClient, string? requestId)
-        {
-            var result = await daprClient.GetStateAsync<string>("processedrequests", requestId);
-            if (result != null)
-            {
-                return true;
-            }
+        //private static async Task<bool> RequestAlreadyProcessedAsync(DaprClient daprClient, string? requestId)
+        //{
+        //    var result = await daprClient.GetStateAsync<string>("processedrequests", requestId);
+        //    if (result != null)
+        //    {
+        //        return true;
+        //    }
 
-            await daprClient.SaveStateAsync("processedrequests", requestId, "true");
-            return false; 
-        }
+        //    await daprClient.SaveStateAsync("processedrequests", requestId, "true");
+        //    return false; 
+        //}
 
-        private static async Task<bool> CheckLiabilityAsync(DaprClient daprClient, ILogger logger, string accountId, decimal amount)
-        {
-            //Check liability
-            var liabilityCheckResult = await daprClient.InvokeMethodAsync<LiabilityResult>(
-                HttpMethod.Get, "liabilityvalidatorengine", $"CheckLiability?accountId={accountId}&amount={amount.ToString(CultureInfo.InvariantCulture)}");
+        //private static async Task<bool> CheckLiabilityAsync(DaprClient daprClient, ILogger logger, string accountId, decimal amount)
+        //{
+        //    //Check liability
+        //    var liabilityCheckResult = await daprClient.InvokeMethodAsync<LiabilityResult>(
+        //        HttpMethod.Get, "liabilityvalidatorengine", $"CheckLiability?accountId={accountId}&amount={amount.ToString(CultureInfo.InvariantCulture)}");
 
-            if (liabilityCheckResult == null)
-            {
-                logger.LogError($"CheckLiability: Liability check failed for account {accountId}");
-                throw new Exception("liabilityValidator service returned an error");
-            }
+        //    if (liabilityCheckResult == null)
+        //    {
+        //        logger.LogError($"CheckLiability: Liability check failed for account {accountId}");
+        //        throw new Exception("liabilityValidator service returned an error");
+        //    }
 
-            return bool.Parse(liabilityCheckResult.WithdrawAllowed ?? "False");
-        }
+        //    return bool.Parse(liabilityCheckResult.WithdrawAllowed ?? "False");
+        //}
     }
 }

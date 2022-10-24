@@ -241,7 +241,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
           image: '${containerRegistry}/${BMSDCheckingAccountAccessorImage}'
           name: BMSDCheckingAccountAccessorServiceContainerAppName
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '2.0Gi'
           }
           env: [
@@ -360,7 +360,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
           image: '${containerRegistry}/${BMSDUserInfoAccessorImage}'
           name: BMSDUserInfoAccessorServiceContainerAppName
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '2.0Gi'
           }
           env: [
@@ -478,7 +478,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
           image: '${containerRegistry}/${BMSDLiabilityValidatorEngineImage}'
           name: BMSDLiabilityValidatorEngineServiceContainerAppName
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '2.0Gi'
           }
           env: [
@@ -573,7 +573,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
           image: '${containerRegistry}/${BMSDNotificationManagerImage}'
           name: BMSDNotificationManagerServiceContainerAppName
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '2.0Gi'
           }
           env: [
@@ -673,7 +673,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '2.0Gi'
           }
           env: [

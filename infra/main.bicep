@@ -241,9 +241,9 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
           image: '${containerRegistry}/${BMSDCheckingAccountAccessorImage}'
           name: BMSDCheckingAccountAccessorServiceContainerAppName
           resources: {
-            cpu: json('0.25')
-            memory: '2.0Gi'
-          }
+            cpu: '0.5'
+            memory: '1Gi'
+          }         
           env: [
             {
               name: 'ASPNETCORE_URLS'
@@ -360,9 +360,9 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
           image: '${containerRegistry}/${BMSDUserInfoAccessorImage}'
           name: BMSDUserInfoAccessorServiceContainerAppName
           resources: {
-            cpu: json('0.25')
-            memory: '2.0Gi'
-          }
+            cpu: '0.5'
+            memory: '1Gi'
+          }         
           env: [
             {
               name: 'ASPNETCORE_URLS'
@@ -478,9 +478,9 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
           image: '${containerRegistry}/${BMSDLiabilityValidatorEngineImage}'
           name: BMSDLiabilityValidatorEngineServiceContainerAppName
           resources: {
-            cpu: json('0.25')
-            memory: '2.0Gi'
-          }
+            cpu: '0.5'
+            memory: '1Gi'
+          }         
           env: [
             {
               name: 'ASPNETCORE_URLS'
@@ -573,9 +573,9 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
           image: '${containerRegistry}/${BMSDNotificationManagerImage}'
           name: BMSDNotificationManagerServiceContainerAppName
           resources: {
-            cpu: json('0.25')
-            memory: '2.0Gi'
-          }
+            cpu: '0.5'
+            memory: '1Gi'
+          }         
           env: [
             {
               name: 'ASPNETCORE_URLS'
@@ -673,9 +673,9 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-03-01'
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
           resources: {
-            cpu: json('0.25')
-            memory: '2.0Gi'
-          }
+            cpu: '0.5'
+            memory: '1Gi'
+          }         
           env: [
             {
               name: 'ASPNETCORE_URLS'

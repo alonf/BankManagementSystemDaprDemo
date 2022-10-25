@@ -20,11 +20,10 @@ jobs:
         azcliversion: 2.30.0
         inlineScript: |
           az account show
-          az group create --name bmsd-containers-app-rg --location westeurope 
-          #eastus2
+          az group create --name bmsd-cont-app-rg --location eastus2
           #use this command and paste the output to the AZURE_CREDENTIALS secret
           #az ad sp create-for-rbac --name "bmsd" --role contributor --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/bmsd-cont-app-rg --sdk-auth
-          az deployment group create --resource-group bmsd-containers-app-rg --template-file infra/main.bicep \
+          az deployment group create --resource-group bmsd-cont-app-rg --template-file infra/main.bicep \
             --parameters branchName='master' \
             containerRegistry='bmsdcr.azurecr.io' \
             containerRegistryUsername="${{secrets.ACR_USERNAME}}" \

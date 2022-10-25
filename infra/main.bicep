@@ -624,6 +624,8 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
         appPort: BMSDAccountManagerPort
         appId: BMSDAccountManagerServiceContainerAppName
         appProtocol: 'http'
+        enableApiLogging: true
+        logLevel:'debug'
       }
       secrets: [
         {
@@ -639,8 +641,11 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
         }
       ]
       ingress: {
+        allowInsecure:true
+        exposedPort:80
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
+        transport: 'http'
       }
     }
     template: {

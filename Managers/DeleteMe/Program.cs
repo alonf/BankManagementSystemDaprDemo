@@ -8,7 +8,7 @@ namespace DeleteMe
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddDapr(); 
 
             var app = builder.Build();
 

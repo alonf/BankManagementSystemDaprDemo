@@ -28,9 +28,9 @@ jobs:
             containerRegistry='bmsdcr.azurecr.io' \
             containerRegistryUsername="${{secrets.ACR_USERNAME}}" \
             containerRegistryPassword="${{secrets.ACR_PASSWORD}}" \
-          #  cosmosDBConnectionString="${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}" \
-          #  cosmosDbUrl=${{secrets.COSMOSDB_URL}} \
-          #  cosmosDBKey="${{secrets.COSMOSDB_KEY}}" \
-          #  cosmosDBDatabaseName=BMSDB \
+            cosmosDBConnectionString="${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}" \
+            cosmosDbUrl=${{secrets.COSMOSDB_URL}} \
+            cosmosDBKey="${{secrets.COSMOSDB_KEY}}" \
+            cosmosDBDatabaseName=BMSDB \
             
           

@@ -642,7 +642,6 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
       ]
       ingress: {
         allowInsecure:true
-        exposedPort:80
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
         transport: 'http'

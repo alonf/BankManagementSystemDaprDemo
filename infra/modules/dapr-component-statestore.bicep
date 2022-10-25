@@ -27,7 +27,11 @@ resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponen
 	  {
 	    name: 'collection'
 	    value:  collectionName
-      }  
+      } 
+      {
+       name: 'actorStateStore'
+       value: 'false'
+      }
     ]
     // Application scopes
     scopes: appScope

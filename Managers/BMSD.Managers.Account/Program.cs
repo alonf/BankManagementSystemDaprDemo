@@ -301,13 +301,21 @@ namespace BMSD.Managers.Account
 
         private static async Task<bool> RequestAlreadyProcessedAsync(DaprClient daprClient, string? requestId)
         {
-            var result = await daprClient.GetStateAsync<string>("processedrequests", requestId);
-            if (result != null)
+            int retryCounter = 0;
+            bool storeResult;
+            do
             {
-                return true;
-            }
+                if (++retryCounter > 10)
+                    throw new Exception("RequestAlreadyProcessedAsync: Failed to get the result from the store 10 times");
+                
+                var (result, etag) = await daprClient.GetStateAndETagAsync<string>("processedrequests", requestId);
+                if (result != null)
+                {
+                    return true;
+                }
 
-            await daprClient.SaveStateAsync("processedrequests", requestId, "true");
+                storeResult = await daprClient.TrySaveStateAsync("processedrequests", requestId, "true", etag);
+            } while (!storeResult);
             return false;
         }
 

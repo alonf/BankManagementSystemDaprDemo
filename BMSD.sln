@@ -71,10 +71,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{37C2
 		infra\modules\containers-app-infra.bicep = infra\modules\containers-app-infra.bicep
 		infra\modules\dapr-component-queue.bicep = infra\modules\dapr-component-queue.bicep
 		infra\modules\dapr-component-signalr.bicep = infra\modules\dapr-component-signalr.bicep
-		infra\modules\servicebus.bicep = infra\modules\servicebus.bicep
 		infra\modules\dapr-component-statestore.bicep = infra\modules\dapr-component-statestore.bicep
+		infra\modules\servicebus.bicep = infra\modules\servicebus.bicep
 		infra\modules\signalr.bicep = infra\modules\signalr.bicep
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteMe", "Managers\DeleteMe\DeleteMe.csproj", "{7BC731BE-BA1D-4AE3-865B-8AD95F55527C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +112,10 @@ Global
 		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE784C84-F713-4A14-ADCE-529756E25FF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC731BE-BA1D-4AE3-865B-8AD95F55527C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC731BE-BA1D-4AE3-865B-8AD95F55527C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC731BE-BA1D-4AE3-865B-8AD95F55527C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC731BE-BA1D-4AE3-865B-8AD95F55527C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +130,7 @@ Global
 		{3E884DAF-D5F9-408C-89B6-8C78688B2869} = {6BABE3E4-38A1-48BE-94FE-86657D09466F}
 		{1F8CC72B-9309-4668-9EE2-AE40AB237B26} = {B11645BA-E10B-4B7A-92EE-2AD874803C80}
 		{37C247F9-3328-4BB9-93EB-0A35347EDD8F} = {B588CD9E-4FB6-4760-AD77-73A12D424466}
+		{7BC731BE-BA1D-4AE3-865B-8AD95F55527C} = {D5D627A3-5E95-4C46-B810-3A6FD54C803A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B1997CA-CFFD-4066-A894-1F02C7EAEA73}

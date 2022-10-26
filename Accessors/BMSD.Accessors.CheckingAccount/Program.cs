@@ -34,11 +34,7 @@ namespace BMSD.Accessors.CheckingAccount
 
             app.UseAuthorization();
 
-            app.MapGet("/liveness", async (HttpContext httpContext) =>
-            {
-                await httpContext.Response.WriteAsync("OK");
-            });
-
+         
             //Update Account from queue
             app.MapPost("/accounttransactionqueue", async (HttpContext httpContext,
                     [FromServices] DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,

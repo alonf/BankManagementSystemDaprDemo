@@ -557,18 +557,48 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
         {
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
-          resources: {
-            cpu: 1
-            memory: '2.0Gi'
-          }         
-          env: [
-            {
-              name: 'ASPNETCORE_URLS'
-              value: 'http://localhost:80'
+          probes: [
+          {
+             type: 'liveness'
+             initialDelaySeconds: 15
+             periodSeconds: 30
+             failureThreshold: 3
+             timeoutSeconds: 1
+             httpGet: {
+               port: BMSDAccountManagerPort
+               path: '/healthz/liveness'
+             }
+          }
+          {
+                 type: 'startup'
+                 timeoutSeconds: 2
+                 httpGet: {
+                   port: BMSDAccountManagerPort
+                   path: '/healthz/startup'
+             }
+           }
+           {
+            type: 'readiness'
+            timeoutSeconds: 3
+            failureThreshold: 3
+            httpGet: {
+              port: BMSDAccountManagerPort
+              path: '/healthz/readiness'
             }
+           }
           ]
-        }
-      ]
+      resources: {
+        cpu: 1
+        memory: '2.0Gi'
+      }         
+      env: [
+      {
+          name: 'ASPNETCORE_URLS'
+          value: 'http://localhost:80'
+      }
+    ]
+    }
+  ]
       scale: {
         minReplicas: minReplicas
         maxReplicas: maxReplicas

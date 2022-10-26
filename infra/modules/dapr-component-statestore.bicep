@@ -11,6 +11,7 @@ resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponen
   properties: {
     componentType: 'state.azure.cosmosdb'
     version: 'v1'
+    ignoreErrors: true
     initTimeout: '5m'
     metadata: [
       {

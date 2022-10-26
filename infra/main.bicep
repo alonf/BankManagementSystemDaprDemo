@@ -75,20 +75,20 @@ module servicebus 'modules/servicebus.bicep' = {
 }
 var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
 
-//module stateStore 'modules/dapr-component-statestore.bicep' = {
-//  name: 'cosmosDBStateStoreDeployment'
-//  params: {
-//     statestoreName: 'processedrequests'
-//     cosmosDbUrl : cosmosDbUrl
-//     masterKey : cosmosDBKey
-//	 databaseName : cosmosDBDatabaseName
-//	 collectionName : 'statestore'
-//	 environmentName: environmentName
-//	 appScope: [
-//	'${BMSDAccountManagerServiceContainerAppName}'
-//	]
-//  }
-//}
+module stateStore 'modules/dapr-component-statestore.bicep' = {
+  name: 'cosmosDBStateStoreDeployment'
+  params: {
+     statestoreName: 'processedrequests'
+     cosmosDbUrl : cosmosDbUrl
+     masterKey : cosmosDBKey
+	 databaseName : cosmosDBDatabaseName
+	 collectionName : 'statestore'
+	 environmentName: environmentName
+	 appScope: [
+	'${BMSDAccountManagerServiceContainerAppName}'
+	]
+  }
+}
 
 module containersAppInfra 'modules/containers-app-infra.bicep' = {
   name: 'containersAppInfraDeployment'
@@ -110,8 +110,6 @@ module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
     signalrKey: signalrKey
     appScope: [
       BMSDNotificationManagerServiceContainerAppName
-	  BMSDUserInfoAccessorServiceContainerAppName
-	  BMSDCheckingAccountAccessorServiceContainerAppName
     ]
   }
   dependsOn:  [
@@ -217,8 +215,8 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
           image: '${containerRegistry}/${BMSDCheckingAccountAccessorImage}'
           name: BMSDCheckingAccountAccessorServiceContainerAppName
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: 1
+            memory: '2.0Gi'
           }         
           env: [
             {
@@ -312,8 +310,8 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
           image: '${containerRegistry}/${BMSDUserInfoAccessorImage}'
           name: BMSDUserInfoAccessorServiceContainerAppName
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: 1
+            memory: '2.0Gi'
           }         
           env: [
             {
@@ -406,8 +404,8 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
           image: '${containerRegistry}/${BMSDLiabilityValidatorEngineImage}'
           name: BMSDLiabilityValidatorEngineServiceContainerAppName
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: 1
+            memory: '2.0Gi'
           }         
           env: [
             {
@@ -477,8 +475,8 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
           image: '${containerRegistry}/${BMSDNotificationManagerImage}'
           name: BMSDNotificationManagerServiceContainerAppName
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: 1
+            memory: '2.0Gi'
           }         
           env: [
             {
@@ -555,8 +553,8 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: 1
+            memory: '2.0Gi'
           }         
           env: [
             {

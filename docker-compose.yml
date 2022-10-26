@@ -335,7 +335,7 @@ services:
       - 8888:8888
       - 7071:7071
     volumes:
-     - ./workspace:/workspaceS
+     - ./workspace:/workspace
     environment:
       - ASRS_EMULATOR_PORT=8888
 #      - ASPNETCORE_ENVIRONMENT=Development

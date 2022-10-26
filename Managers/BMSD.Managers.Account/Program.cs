@@ -301,22 +301,22 @@ namespace BMSD.Managers.Account
 
         private static async Task<bool> RequestAlreadyProcessedAsync(DaprClient daprClient, string? requestId)
         {
-            //int retryCounter = 0;
-            //bool storeResult;
-            //do
-            //{
-            //    if (++retryCounter > 10)
-            //        throw new Exception("RequestAlreadyProcessedAsync: Failed to get the result from the store 10 times");
+            int retryCounter = 0;
+            bool storeResult;
+            do
+            {
+                if (++retryCounter > 10)
+                    throw new Exception("RequestAlreadyProcessedAsync: Failed to get the result from the store 10 times");
                 
-            //    var (result, etag) = await daprClient.GetStateAndETagAsync<string>("processedrequests", requestId);
-            //    if (result != null)
-            //    {
-            //        return true;
-            //    }
+                var (result, etag) = await daprClient.GetStateAndETagAsync<string>("processedrequests", requestId);
+                if (result != null)
+                {
+                    return true;
+                }
 
-            //    storeResult = await daprClient.TrySaveStateAsync("processedrequests", requestId, "true", etag);
-            //} while (!storeResult);
-            return await Task.FromResult(false);
+                storeResult = await daprClient.TrySaveStateAsync("processedrequests", requestId, "true", etag);
+            } while (!storeResult);
+            return false;
         }
 
         private static async Task<bool> CheckLiabilityAsync(DaprClient daprClient, ILogger logger, string accountId, decimal amount)

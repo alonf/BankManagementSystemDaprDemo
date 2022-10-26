@@ -1,9 +1,10 @@
 param environmentName string
 param signalrKey string
+param signalRName string
 param appScope array
 
 resource daprComponentSignalR 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
-  name: '${environmentName}/clientcallback'
+  name: '${environmentName}/${signalRName}'
   properties: {
     componentType: 'bindings.azure.signalr'
     version: 'v1'

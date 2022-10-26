@@ -50,14 +50,14 @@ var branch = toLower(last(split(branchName, '/')))
 
 var signalRName = '${branch}-bmsd-signalr'
 
-var environmentName = 'bmsd-env'
+var environmentName = '${branch}-bmsd-env'
 var workspaceName = '${branch}-log-analytics'
 var appInsightsName = '${branch}-app-insights'
-var BMSDAccountManagerServiceContainerAppName = 'accountmanager' 
-var BMSDNotificationManagerServiceContainerAppName = 'notificationmanager'
-var BMSDUserInfoAccessorServiceContainerAppName = 'userinfoaccessor' 
-var BMSDCheckingAccountAccessorServiceContainerAppName = 'checkingaccountaccessor'
-var BMSDLiabilityValidatorEngineServiceContainerAppName = 'liabilityvalidatorengine' 
+var BMSDAccountManagerServiceContainerAppName = '${branch}-accountmanager' 
+var BMSDNotificationManagerServiceContainerAppName = '${branch}-notificationmanager'
+var BMSDUserInfoAccessorServiceContainerAppName = '${branch}-userinfoaccessor' 
+var BMSDCheckingAccountAccessorServiceContainerAppName = '${branch}-checkingaccountaccessor'
+var BMSDLiabilityValidatorEngineServiceContainerAppName = '${branch}-liabilityvalidatorengine' 
 
 
 module signalr 'modules/signalr.bicep' = {
@@ -97,6 +97,7 @@ module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
   params: {
     environmentName: environmentName
     signalrKey: signalrKey
+    signalRName: 'clientcallback'
     appScope: [
       BMSDNotificationManagerServiceContainerAppName
     ]
@@ -105,22 +106,6 @@ module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
     containersAppInfra
     signalr
   ]
-}
-
-
-module stateStore 'modules/dapr-component-statestore.bicep' = {
-  name: 'cosmosDBStateStoreDeployment'
-  params: {
-     statestoreName: 'processedrequests'
-     cosmosDbUrl : cosmosDbUrl
-     masterKey : cosmosDBKey
-	 databaseName : cosmosDBDatabaseName
-	 collectionName : 'statestore'
-	 environmentName: environmentName
-	 appScope: [
-	'${BMSDAccountManagerServiceContainerAppName}'
-	]
-  }
 }
 
 
@@ -178,7 +163,20 @@ module daprComponentClientResponseQueue 'modules/dapr-component-queue.bicep' = {
   ]
 }
 
-
+module stateStore 'modules/dapr-component-statestore.bicep' = {
+  name: 'cosmosDBStateStoreDeployment'
+  params: {
+     statestoreName: 'processedrequests'
+     cosmosDbUrl : cosmosDbUrl
+     masterKey : cosmosDBKey
+	 databaseName : cosmosDBDatabaseName
+	 collectionName : 'statestore'
+	 environmentName: environmentName
+	 appScope: [
+	'${BMSDAccountManagerServiceContainerAppName}'
+	]
+  }
+}
 
 resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: BMSDCheckingAccountAccessorServiceContainerAppName

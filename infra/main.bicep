@@ -77,20 +77,7 @@ module servicebus 'modules/servicebus.bicep' = {
 }
 var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
 
-module stateStore 'modules/dapr-component-statestore.bicep' = {
-  name: 'cosmosDBStateStoreDeployment'
-  params: {
-     statestoreName: 'processedrequests'
-     cosmosDbUrl : cosmosDbUrl
-     masterKey : cosmosDBKey
-	 databaseName : cosmosDBDatabaseName
-	 collectionName : 'statestore'
-	 environmentName: environmentName
-	 appScope: [
-	'${BMSDAccountManagerServiceContainerAppName}'
-	]
-  }
-}
+
 
 module containersAppInfra 'modules/containers-app-infra.bicep' = {
   name: 'containersAppInfraDeployment'
@@ -119,6 +106,23 @@ module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
     signalr
   ]
 }
+
+
+module stateStore 'modules/dapr-component-statestore.bicep' = {
+  name: 'cosmosDBStateStoreDeployment'
+  params: {
+     statestoreName: 'processedrequests'
+     cosmosDbUrl : cosmosDbUrl
+     masterKey : cosmosDBKey
+	 databaseName : cosmosDBDatabaseName
+	 collectionName : 'statestore'
+	 environmentName: environmentName
+	 appScope: [
+	'${BMSDAccountManagerServiceContainerAppName}'
+	]
+  }
+}
+
 
 module daprComponentAccountTransactionQueue 'modules/dapr-component-queue.bicep' = {
   name: 'daprComponentAccountTransactionQueueDeployment'

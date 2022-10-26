@@ -175,7 +175,10 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
 	 appScope: [
 	'${BMSDAccountManagerServiceContainerAppName}'
 	]
-  }
+    }
+    dependsOn:  [
+    containersAppInfra
+  ]
 }
 
 resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {

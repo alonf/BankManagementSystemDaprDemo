@@ -4,7 +4,7 @@ param tags object
 param appInsightsName string
 param environmentName string
 
-resource workspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
+resource workspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: workspaceName
   location: location
   tags: tags

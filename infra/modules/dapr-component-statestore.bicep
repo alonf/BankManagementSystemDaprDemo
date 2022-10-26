@@ -6,7 +6,7 @@ param databaseName string
 param collectionName string
 param appScope array
 
-resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponents@2022-03-01' = {
+resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
   name: '${environmentName}/${statestoreName}'
   properties: {
     componentType: 'state.azure.cosmosdb'

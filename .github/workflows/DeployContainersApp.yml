@@ -31,6 +31,6 @@ jobs:
             cosmosDBConnectionString="${{secrets.BMSD_COSMOSDB_CONNECTION_STRING}}" \
             cosmosDbUrl=${{secrets.COSMOSDB_URL}} \
             cosmosDBKey="${{secrets.COSMOSDB_KEY}}" \
-            cosmosDBDatabaseName=BMSDB \
+            cosmosDBDatabaseName=BMSDB 
             
           

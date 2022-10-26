@@ -1,6 +1,8 @@
 param branchName string
 param cosmosDbUrl string
 param cosmosDBDatabaseName string
+param location string = resourceGroup().location
+
 param containerRegistry string
 
 @secure()
@@ -18,7 +20,7 @@ param cosmosDBKey string
 
 param tags object = {}
 
-param location string = resourceGroup().location
+
 
 var BMSDAccountManagerImage = 'bmsd.managers.account:${branchName}'
 var BMSDAccountManagerPort = 80
@@ -526,8 +528,6 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
         appPort: BMSDAccountManagerPort
         appId: BMSDAccountManagerServiceContainerAppName
         appProtocol: 'http'
-        enableApiLogging: true
-        logLevel:'debug'
       }
       secrets: [
         {

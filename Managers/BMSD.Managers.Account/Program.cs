@@ -12,6 +12,7 @@ namespace BMSD.Managers.Account
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine($"*** Account Manager is starting ***");
             try
             {
                 var builder = WebApplication.CreateBuilder(args);

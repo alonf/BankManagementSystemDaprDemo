@@ -54,7 +54,7 @@ namespace BMSD.Managers.Account
 
                 app.UseCors(MyAllowSpecificOrigins);
 
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
 
                 app.Urls.Add("http://*:80");
                 

@@ -12,21 +12,21 @@ namespace BMSD.Managers.Account
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("*** Account Manager is starting 1111***");
+            Console.WriteLine("*** Account Manager is starting ***");
 
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
-                var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-                // Add services to the container.
-                builder.Services.AddCors(options =>
-                {
-                    options.AddPolicy(name: MyAllowSpecificOrigins,
-                        policy =>
-                        {
-                            policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
-                        });
-                });
+                //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+                //// Add services to the container.
+                //builder.Services.AddCors(options =>
+                //{
+                //    options.AddPolicy(name: MyAllowSpecificOrigins,
+                //        policy =>
+                //        {
+                //            policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
+                //        });
+                //});
                 
                 
                 builder.Services.AddHealthChecks();
@@ -53,13 +53,13 @@ namespace BMSD.Managers.Account
 
                 var app = builder.Build();
 
-                app.UseCors(MyAllowSpecificOrigins);
+                //app.UseCors(MyAllowSpecificOrigins);
 
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
 
-                app.Urls.Add("http://*:80");
+                //app.Urls.Add("http://*:80");
                 
-                app.MapControllers();
+                //app.MapControllers();
                 
                 app.MapHealthChecks("/healthz");
 

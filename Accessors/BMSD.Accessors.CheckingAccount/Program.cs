@@ -16,7 +16,7 @@ namespace BMSD.Accessors.CheckingAccount
         public static void Main(string[] args)
         {
             //print application start
-            Console.WriteLine("CheckingAccountAccessor: Starting... 1");
+            Console.WriteLine("CheckingAccountAccessor: Starting");
 
 
             var builder = WebApplication.CreateBuilder(args);

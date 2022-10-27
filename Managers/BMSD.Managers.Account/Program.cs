@@ -60,9 +60,9 @@ namespace BMSD.Managers.Account
                 
                 app.MapControllers();
                 
-                app.MapHealthChecks("/healthz");
+                //app.MapHealthChecks("/healthz");
 
-                app.UseAuthorization();
+                //app.UseAuthorization();
 
 
                 var serializeOptions = new JsonSerializerOptions

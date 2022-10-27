@@ -12,7 +12,8 @@ namespace BMSD.Managers.Account
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine($"*** Account Manager is starting ***");
+            Console.WriteLine("*** Account Manager is starting 1111***");
+
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +59,7 @@ namespace BMSD.Managers.Account
 
                 app.Urls.Add("http://*:80");
                 
-                //app.MapControllers();
+                app.MapControllers();
                 
                 app.MapHealthChecks("/healthz");
 

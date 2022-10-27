@@ -16,6 +16,18 @@ namespace BMSD.Managers.Account
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
+                var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+                // Add services to the container.
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy(name: MyAllowSpecificOrigins,
+                        policy =>
+                        {
+                            policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
+                        });
+                });
+                
+                
                 builder.Services.AddHealthChecks();
 
                 // Add services to the container.
@@ -40,6 +52,14 @@ namespace BMSD.Managers.Account
 
                 var app = builder.Build();
 
+                app.UseCors(MyAllowSpecificOrigins);
+
+                app.UseHttpsRedirection();
+
+                app.Urls.Add("http://*:80");
+                
+                app.MapControllers();
+                
                 app.MapHealthChecks("/healthz");
 
                 app.UseAuthorization();

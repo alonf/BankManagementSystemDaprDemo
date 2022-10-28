@@ -51,14 +51,15 @@ resource queues 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue
 
 
 var serviceBusEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
+var connectionString =  listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
 resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   name: '${keyvaultName}/${serviceBusConnectionStringSecretName}'
   properties: {
     contentType: 'text/plain'
-    value: listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
+    value: connectionString
   }
 }
 
 //set out to service bus connection string
-output serviceBusConnectionString string = connection_string_secret.properties.value
+output serviceBusConnectionString string = connectionString

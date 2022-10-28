@@ -15,6 +15,10 @@ namespace BMSD.Accessors.CheckingAccount
         
         public static void Main(string[] args)
         {
+            //print application start
+            Console.WriteLine("CheckingAccountAccessor: Starting");
+
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

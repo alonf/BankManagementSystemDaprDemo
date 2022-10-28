@@ -22,28 +22,26 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
         tenantId: tenantId
         permissions: {
           keys: [
-          'get'
-          'list'
-          ]
-          secrets: [
-              'get'
-              'list'
-          ]
-        }
-      }
-      {
-          //the current user principle
-        objectId:  bicepRunnerObjectId
-        tenantId: tenantId
-        permissions: {
-          keys: [
           'all'
           ]
           secrets: [
-              'all' 
+              'all'
           ]
         }
       }
+      //{
+      //    //the current user principle
+      //  objectId:  bicepRunnerObjectId
+      //  tenantId: tenantId
+      //  permissions: {
+      //    keys: [
+      //    'all'
+      //    ]
+      //    secrets: [
+      //        'all' 
+      //    ]
+      //  }
+      //}
     ]
   }
 }

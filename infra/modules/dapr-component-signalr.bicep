@@ -10,16 +10,10 @@ resource daprComponentSignalR 'Microsoft.App/managedEnvironments/daprComponents@
   properties: {
     componentType: 'bindings.azure.signalr'
     version: 'v1'
-    secrets: [
-      {
-        name: 'signalrkeyref'
-        value:  signalRConnectionStringSecretName
-      }
-    ]
     metadata: [
       {
         name: 'connectionString'
-        secretRef: 'signalrkeyref'
+        secretRef: signalRConnectionStringSecretName
       }
       {
         name: 'hub'

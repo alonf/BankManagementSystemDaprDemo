@@ -12,16 +12,10 @@ resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@20
   properties: {
     componentType: 'bindings.azure.servicebusqueues'
     version: 'v1'
-    secrets: [
-      {
-        name: 'servicebuskeyref'
-        value: serviceBusConnectionStringSecretName
-      }
-    ]
     metadata: [
       {
         name: 'connectionString'
-        secretRef: 'servicebuskeyref'
+        secretRef: serviceBusConnectionStringSecretName
       }
       {
         name: 'queueName'

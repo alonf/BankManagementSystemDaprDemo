@@ -98,62 +98,63 @@ var managedIdentityClientId = uami.outputs.clientId
 
 
 //create the secret keyvault
-//module keyvault 'modules/keyvault.bicep' = {
-//   name: keyVaultName
-//    params: {
-//        keyVaultName: keyVaultName
-//        location: location
-//        objectId: managedIdentityObjectId
-//        bicepRunnerObjectId: bicepRunnerObjectId
-//    }
-//    dependsOn: [
-//     uami   
-//    ]
-//}
-
-resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
-  name: keyVaultName
-  location: location
-  properties: {
-    sku: {
-      family: 'A'
-      name: 'standard'
-    }
-    enabledForDeployment: true
-    enabledForTemplateDeployment: true
-    enableSoftDelete: false
-    tenantId: tenant().tenantId
-     accessPolicies: [
-      {
+module keyvault 'modules/keyvault.bicep' = {
+   name: keyVaultName
+    params: {
+        keyVaultName: keyVaultName
+        location: location
         objectId: managedIdentityObjectId
+        bicepRunnerObjectId: bicepRunnerObjectId
         tenantId: tenant().tenantId
-        permissions: {
-          keys: [
-          'get'
-          'list'
-          ]
-          secrets: [
-              'get'
-              'list'
-          ]
-        }
-      }
-      {
-          //the current user principle
-        objectId:  bicepRunnerObjectId
-        tenantId: tenant().tenantId
-        permissions: {
-          keys: [
-          'all'
-          ]
-          secrets: [
-              'all' 
-          ]
-        }
-      }
+    }
+    dependsOn: [
+     uami   
     ]
-  }
 }
+
+//resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
+//  name: keyVaultName
+//  location: location
+//  properties: {
+//    sku: {
+//      family: 'A'
+//      name: 'standard'
+//    }
+//    enabledForDeployment: true
+//    enabledForTemplateDeployment: true
+//    enableSoftDelete: false
+//    tenantId: tenant().tenantId
+//     accessPolicies: [
+//      {
+//        objectId: managedIdentityObjectId
+//        tenantId: tenant().tenantId
+//        permissions: {
+//          keys: [
+//          'get'
+//          'list'
+//          ]
+//          secrets: [
+//              'get'
+//              'list'
+//          ]
+//        }
+//      }
+//      {
+//          //the current user principle
+//        objectId:  bicepRunnerObjectId
+//        tenantId: tenant().tenantId
+//        permissions: {
+//          keys: [
+//          'all'
+//          ]
+//          secrets: [
+//              'all' 
+//          ]
+//        }
+//      }
+//    ]
+//  }
+//}
 
 ////add the azure container registry password to the keyvault
 //resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {

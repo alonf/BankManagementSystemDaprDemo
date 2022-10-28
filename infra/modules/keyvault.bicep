@@ -40,7 +40,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
           'all'
           ]
           secrets: [
-              'all'
+              'all' 
           ]
         }
       }

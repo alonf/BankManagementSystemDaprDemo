@@ -20,20 +20,20 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
     }
     tenantId: tenant().tenantId
      accessPolicies: [
-      {
-        objectId: objectId
-        tenantId: tenant().tenantId
-        permissions: {
-          keys: [
-          'get'
-          'list'
-          ]
-          secrets: [
-              'get'
-              'list'
-          ]
-        }
-      }
+      //{
+      //  objectId: objectId
+      //  tenantId: tenant().tenantId
+      //  permissions: {
+      //    keys: [
+      //    'get'
+      //    'list'
+      //    ]
+      //    secrets: [
+      //        'get'
+      //        'list'
+      //    ]
+      //  }
+      //}
       {
         objectId: bicepRunnerObjectId
         tenantId: tenant().tenantId

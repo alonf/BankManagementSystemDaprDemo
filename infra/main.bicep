@@ -102,6 +102,9 @@ module keyvault 'modules/keyvault.bicep' = {
         location: location
         objectId: managedIdentityObjectId
     }
+    dependsOn: [
+     uami   
+    ]
 }
 
 //add the azure container registry password to the keyvault
@@ -110,6 +113,9 @@ resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2019
   properties: {
     value: containerRegistryPassword
   }
+  dependsOn: [
+     keyvault   
+    ]
 }
 
 module signalr 'modules/signalr.bicep' = {

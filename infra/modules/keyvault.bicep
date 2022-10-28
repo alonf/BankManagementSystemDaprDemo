@@ -37,14 +37,10 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
         tenantId: tenant().tenantId
         permissions: {
           keys: [
-          'get'
-          'list'
-          'set'
+          'all'
           ]
           secrets: [
-              'get'
-              'list'
-              'set'
+              'all'
           ]
         }
       }

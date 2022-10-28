@@ -12,12 +12,12 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
     capacity: 1
   }
   kind: 'SignalR'
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${objectId}' : {}
-    }
-  }
+  //identity: {
+  //  type: 'UserAssigned'
+  //  userAssignedIdentities: {
+  //    '${objectId}' : {}
+  //  }
+  //}
   properties: {
     tls: {
       clientCertEnabled: false

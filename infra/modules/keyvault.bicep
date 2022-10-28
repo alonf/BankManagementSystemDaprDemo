@@ -48,5 +48,5 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
   }
 }
 
-var key = keyvault.listKeys().primaryConnectionString
-output keyvaultConnectionString string = key
+//var key = keyvault.listKeys().primaryConnectionString
+//output keyvaultConnectionString string = key

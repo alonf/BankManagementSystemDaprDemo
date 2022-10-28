@@ -1,6 +1,9 @@
-param serviceBusNamespaceName string = 'bmsd-sb-${uniqueString(resourceGroup().id)}'
 param skuName string = 'Standard'
 param location string
+param keyvaultName string 
+param serviceBusConnectionStringSecretName string
+param servicebusNamespaceName string
+param objectId string
 
 param queueNames array = [
   'accounttransactionqueue'
@@ -11,11 +14,17 @@ param queueNames array = [
 var deadLetterFirehoseQueueName = 'deadletterfirehose'
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
-  name: serviceBusNamespaceName
+  name: servicebusNamespaceName
   location: location
   sku: {
     name: skuName
     tier: skuName
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${objectId}' : {}
+    }
   }
 }
 
@@ -40,7 +49,13 @@ resource queues 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue
   }
 }]
 
-var serviceBusEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
-var conStr =  listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
-output serviceBusConnectionString string = conStr
 
+var serviceBusEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
+
+resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  name: '${keyvaultName}/${serviceBusConnectionStringSecretName}'
+  properties: {
+    contentType: 'text/plain'
+    value: listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
+  }
+}

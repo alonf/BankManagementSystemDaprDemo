@@ -21,6 +21,7 @@ param cosmosDBKey string
 param tags object = {}
 
 
+var uamiName = '${uniqueString(resourceGroup().id)}-uami'
 
 var BMSDAccountManagerImage = 'bmsd.managers.account:${branchName}'
 var BMSDAccountManagerPort = 80
@@ -48,8 +49,16 @@ var maxReplicas = 1
 
 var branch = toLower(last(split(branchName, '/')))
 
-var signalRName = '${branch}-bmsd-signalr'
+var containerRegistryPasswordSecretName = 'acrpasswordsecretkey'
 
+var signalRName = '${branch}-bmsd-signalr'
+var signalRConnectionStringSecretKeyName = 'signalrsecretkey'
+
+var servicebusNamespaceName = '${branch}-bmsd-survicebus'
+var servicebusConnectionStringSecretKeyName = 'survicebussecretkey'
+
+
+var keyVaultName = '${branch}-bmsd-keyvault'
 var environmentName = '${branch}-bmsd-env'
 var workspaceName = '${branch}-log-analytics'
 var appInsightsName = '${branch}-app-insights'
@@ -59,26 +68,19 @@ var BMSDUserInfoAccessorServiceContainerAppName = '${branch}-userinfoaccessor'
 var BMSDCheckingAccountAccessorServiceContainerAppName = '${branch}-checkingaccountaccessor'
 var BMSDLiabilityValidatorEngineServiceContainerAppName = '${branch}-liabilityvalidatorengine' 
 
-
-module signalr 'modules/signalr.bicep' = {
-  name: 'signalrDeployment'
+//create the assigned user managed identity
+module uami 'modules/identity.bicep' = {
+  name: uamiName
   params: {
-    signalRName: signalRName
+    uamiName: uamiName
     location: location
   }
 }
-var signalrKey = signalr.outputs.signalrKey
-
-module servicebus 'modules/servicebus.bicep' = {
-  name: 'servicebusQueuesAndPubSubDeployment'
-  params: {
-    location: location
-  }
-}
-var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
+var managedIdentityObjectId = uami.outputs.principalId
+var managedIdentityClientId = uami.outputs.clientId
 
 
-
+//create the containers app required services
 module containersAppInfra 'modules/containers-app-infra.bicep' = {
   name: 'containersAppInfraDeployment'
   params: {
@@ -92,11 +94,80 @@ module containersAppInfra 'modules/containers-app-infra.bicep' = {
 var environmentId = containersAppInfra.outputs.environmentId
 
 
+//create the secret keyvault
+module keyvault 'modules/keyvault.bicep' = {
+   name: 'keyvault'
+    params: {
+        keyVaultName: keyVaultName
+        location: location
+        objectId: managedIdentityObjectId
+    }
+}
+
+//add the azure container registry password to the keyvault
+resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: '${keyVaultName}/${containerRegistryPasswordSecretName}'
+  properties: {
+    value: containerRegistryPassword
+  }
+}
+
+module signalr 'modules/signalr.bicep' = {
+  name: 'signalrDeployment'
+  params: {
+    signalRName: signalRName
+    keyvaultName: keyVaultName
+    signalRConnectionStringSecretName: signalRConnectionStringSecretKeyName
+    objectId : managedIdentityObjectId
+    location: location
+  }
+   dependsOn:  [
+    keyvault
+  ]
+}
+
+
+module servicebus 'modules/servicebus.bicep' = {
+  name: 'servicebusQueuesAndPubSubDeployment'
+  params: {
+    location: location
+    servicebusNamespaceName: servicebusNamespaceName
+    objectId: managedIdentityObjectId
+    keyvaultName: keyVaultName
+    serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
+  }
+  dependsOn:  [
+    keyvault
+  ]
+}
+
+
+module daprComponentSecretStore 'modules/dapr-component-secretstore.bicep' = {
+  name: 'daprComponentSecretStoreDeployment'
+  params: {
+    keyvaultName: keyVaultName
+    clientId: managedIdentityClientId
+    environmentName: environmentName
+    appScope: [
+      BMSDAccountManagerServiceContainerAppName
+      BMSDNotificationManagerServiceContainerAppName
+      BMSDUserInfoAccessorServiceContainerAppName
+      BMSDCheckingAccountAccessorServiceContainerAppName
+      BMSDLiabilityValidatorEngineServiceContainerAppName
+    ]
+  }
+  dependsOn:  [
+    containersAppInfra
+    keyvault
+  ]
+}
+
+
 module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
   name: 'daprComponentSignalRDeployment'
   params: {
     environmentName: environmentName
-    signalrKey: signalrKey
+    signalRConnectionStringSecretName: signalRConnectionStringSecretKeyName
     signalRName: 'clientcallback'
     appScope: [
       BMSDNotificationManagerServiceContainerAppName
@@ -114,7 +185,7 @@ module daprComponentAccountTransactionQueue 'modules/dapr-component-queue.bicep'
   params: {
     queueName:'accounttransactionqueue'
     environmentName: environmentName
-    serviceBusConnectionString: serviceBusConnectionString
+    serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDAccountManagerServiceContainerAppName}'
       '${BMSDCheckingAccountAccessorServiceContainerAppName}'
@@ -132,7 +203,7 @@ module daprComponentCustomerRegistrationQueue 'modules/dapr-component-queue.bice
   params: {
     queueName:'customerregistrationqueue'
     environmentName: environmentName
-    serviceBusConnectionString: serviceBusConnectionString
+    serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDAccountManagerServiceContainerAppName}'
       '${BMSDUserInfoAccessorServiceContainerAppName}'
@@ -150,7 +221,7 @@ module daprComponentClientResponseQueue 'modules/dapr-component-queue.bicep' = {
   params: {
     queueName:'clientresponsequeue'
     environmentName: environmentName
-    serviceBusConnectionString: serviceBusConnectionString
+    serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDNotificationManagerServiceContainerAppName}'
       '${BMSDCheckingAccountAccessorServiceContainerAppName}'
@@ -181,10 +252,20 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
   ]
 }
 
+resource uamiResource 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' existing = {
+  name: uamiName
+}
+
 resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: BMSDCheckingAccountAccessorServiceContainerAppName
   tags: tags
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uamiResource.id}' : {}
+    }
+  }
   properties: {
     managedEnvironmentId: environmentId
     configuration: {
@@ -197,11 +278,11 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPassword
+          value: containerRegistryPasswordSecretName
         }
         {
           name: 'servicebuskeyref'
-          value: serviceBusConnectionString
+          value: servicebusConnectionStringSecretKeyName
         }
       ]
       registries: [
@@ -270,8 +351,10 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
     }
   }
   dependsOn:  [
+    uami
     containersAppInfra
     servicebus
+    keyvault
   ]
 }
 
@@ -281,6 +364,12 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
   name: BMSDUserInfoAccessorServiceContainerAppName
   tags: tags
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uamiResource.id}' : {}
+    }
+  }
   properties: {
     managedEnvironmentId: environmentId
     configuration: {
@@ -292,11 +381,11 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPassword
+          value: containerRegistryPasswordSecretName
         }
         {
           name: 'servicebuskeyref'
-          value: serviceBusConnectionString
+          value: servicebusConnectionStringSecretKeyName
         }
       ]
       registries: [
@@ -367,6 +456,8 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
   dependsOn:  [
     containersAppInfra
     servicebus
+    keyvault
+    uami
   ]
 }
 
@@ -374,6 +465,12 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
   name: BMSDLiabilityValidatorEngineServiceContainerAppName
   tags: tags
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uamiResource.id}' : {}
+    }
+  }
   properties: {
     managedEnvironmentId: environmentId
     configuration: {
@@ -386,11 +483,11 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPassword
+          value: containerRegistryPasswordSecretName
         }
         {
           name: 'servicebuskeyref'
-          value: serviceBusConnectionString
+          value: servicebusConnectionStringSecretKeyName
         }
       ]
       registries: [
@@ -441,6 +538,8 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
   dependsOn:  [
     containersAppInfra
     servicebus
+    keyvault
+    uami
   ]
 }
 
@@ -449,6 +548,12 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
   name: BMSDNotificationManagerServiceContainerAppName
   tags: tags
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uamiResource.id}' : {}
+    }
+  }
   properties: {
     managedEnvironmentId: environmentId
     configuration: {
@@ -461,7 +566,15 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPassword
+          value: containerRegistryPasswordSecretName
+        }
+        {
+          name: 'servicebuskeyref'
+          value: servicebusConnectionStringSecretKeyName
+        }
+        {
+          name: 'signalrkeyref'
+          value: signalRConnectionStringSecretKeyName
         }
       ]
       registries: [
@@ -492,7 +605,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
             }
 			{
               name: 'AZURE__SignalR__ConnectionString'
-              value: signalrKey
+              secretRef: 'signalrkeyref'
             }
           ]
         }
@@ -517,6 +630,8 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
     containersAppInfra
     servicebus
     signalr
+    keyvault
+    uami
   ]
 }
 
@@ -525,6 +640,12 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
   name: BMSDAccountManagerServiceContainerAppName
   tags: tags
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uamiResource.id}' : {}
+    }
+  }
   properties: {
     managedEnvironmentId: environmentId
     configuration: {
@@ -537,7 +658,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPassword
+          value: containerRegistryPasswordSecretName
         }
       ]
       registries: [
@@ -621,6 +742,8 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
     BMSDLiabilityValidatorEngineContainerApp
     containersAppInfra
     servicebus
+    keyvault
+    uami
   ]
 }
 

@@ -1,5 +1,5 @@
 param environmentName string
-param signalrKey string
+param signalRConnectionStringSecretName string
 param signalRName string
 param appScope array
 
@@ -11,7 +11,7 @@ resource daprComponentSignalR 'Microsoft.App/managedEnvironments/daprComponents@
     secrets: [
       {
         name: 'signalrkeyref'
-        value:  signalrKey
+        value:  signalRConnectionStringSecretName
       }
     ]
     metadata: [

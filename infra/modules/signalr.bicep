@@ -1,5 +1,8 @@
 param signalRName string
 param location string
+param objectId string
+param keyvaultName string 
+param signalRConnectionStringSecretName string
 
 resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
   name: signalRName
@@ -10,7 +13,10 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
   }
   kind: 'SignalR'
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${objectId}' : {}
+    }
   }
   properties: {
     tls: {
@@ -72,5 +78,14 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
     }*/
   }
 }
+
 var key = signalR.listKeys().primaryConnectionString
-output signalrKey string = key
+
+resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  name: '${keyvaultName}/${signalRConnectionStringSecretName}'
+  properties: {
+    contentType: 'text/plain'
+    value: key
+  }
+}
+

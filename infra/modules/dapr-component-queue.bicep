@@ -1,6 +1,6 @@
 
 param environmentName string
-param serviceBusConnectionString string
+param serviceBusConnectionStringSecretName string
 param queueName string
 param appScope array
 
@@ -13,7 +13,7 @@ resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@20
     secrets: [
       {
         name: 'servicebuskeyref'
-        value: serviceBusConnectionString
+        value: serviceBusConnectionStringSecretName
       }
     ]
     metadata: [

@@ -3,7 +3,7 @@ param location string
 param keyvaultName string 
 param serviceBusConnectionStringSecretName string
 param servicebusNamespaceName string
-param objectId string
+param uamiId string
 
 param queueNames array = [
   'accounttransactionqueue'
@@ -23,7 +23,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${objectId}' : {}
+      '${uamiId}' : {}
     }
   }
 }

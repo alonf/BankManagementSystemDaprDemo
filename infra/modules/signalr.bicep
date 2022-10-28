@@ -1,6 +1,6 @@
 param signalRName string
 param location string
-param objectId string
+param uamiId string
 param keyvaultName string 
 param signalRConnectionStringSecretName string
 
@@ -15,7 +15,7 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      'Microsoft.ManagedIdentity/userAssignedIdentities/${objectId}' : {}
+     '${uamiId}': {}
     }
   }
   properties: {

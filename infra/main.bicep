@@ -81,7 +81,7 @@ module uami 'modules/identity.bicep' = {
 }
 var managedIdentityObjectId = uami.outputs.principalId
 var managedIdentityClientId = uami.outputs.clientId
-
+var uamiId = uami.outputs.uamiId
 
 //create the containers app required services
 module containersAppInfra 'modules/containers-app-infra.bicep' = {
@@ -130,7 +130,7 @@ module signalr 'modules/signalr.bicep' = {
     signalRName: signalRName
     keyvaultName: keyVaultName
     signalRConnectionStringSecretName: signalRConnectionStringSecretKeyName
-    objectId : managedIdentityObjectId
+    uamiId : uamiId
     location: location
   }
    dependsOn:  [
@@ -144,7 +144,7 @@ module servicebus 'modules/servicebus.bicep' = {
   params: {
     location: location
     servicebusNamespaceName: servicebusNamespaceName
-    objectId: managedIdentityObjectId
+    uamiId: uamiId
     keyvaultName: keyVaultName
     serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
   }

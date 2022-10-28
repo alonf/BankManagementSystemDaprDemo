@@ -23,7 +23,7 @@ jobs:
           az group create --name bmsd-cont-app-rg --location eastus2
           #use this command and paste the output to the AZURE_CREDENTIALS secret
           #az ad sp create-for-rbac --name "bmsd" --role contributor --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/bmsd-cont-app-rg --sdk-auth
-          export appId = `az ad sp list --display-name bmsd --query "[].appId | [0]"`
+          export appId=`az ad sp list --display-name bmsd --query "[].appId | [0]"`
           az deployment group create --resource-group bmsd-cont-app-rg --template-file infra/main.bicep \
             --parameters branchName='master' \
             bicepRunnerObjectId = $appId \

@@ -74,6 +74,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{37C2
 		infra\modules\dapr-component-statestore.bicep = infra\modules\dapr-component-statestore.bicep
 		infra\modules\servicebus.bicep = infra\modules\servicebus.bicep
 		infra\modules\signalr.bicep = infra\modules\signalr.bicep
+		infra\modules\identity.bicep = infra\modules\identity.bicep
+		infra\modules\dapr-component-secretstore.bicep = infra\modules\dapr-component-secretstore.bicep
+		infra\modules\keyvault.bicep = infra\modules\keyvault.bicep
 	EndProjectSection
 EndProject
 Global

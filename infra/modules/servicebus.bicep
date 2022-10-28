@@ -59,3 +59,6 @@ resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-
     value: listKeys(serviceBusEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
   }
 }
+
+//set out to service bus connection string
+output serviceBusConnectionString string = connection_string_secret.properties.value

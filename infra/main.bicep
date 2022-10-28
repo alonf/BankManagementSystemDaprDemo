@@ -137,6 +137,7 @@ module signalr 'modules/signalr.bicep' = {
     keyvault
   ]
 }
+var signalRConnectionString = signalr.outputs.signalRConnectionString
 
 
 module servicebus 'modules/servicebus.bicep' = {
@@ -152,6 +153,7 @@ module servicebus 'modules/servicebus.bicep' = {
     keyvault
   ]
 }
+var serviceBusConnectionString = servicebus.outputs.serviceBusConnectionString
 
 
 module daprComponentSecretStore 'modules/dapr-component-secretstore.bicep' = {
@@ -273,6 +275,8 @@ resource uamiResource 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-
   name: uamiName
 }
 
+
+
 resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: BMSDCheckingAccountAccessorServiceContainerAppName
   tags: tags
@@ -292,14 +296,14 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
         appId: BMSDCheckingAccountAccessorServiceContainerAppName
         appProtocol: 'http'
       }
-      secrets: [
+       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPasswordSecretName
+          value: containerRegistryPassword
         }
         {
           name: 'servicebuskeyref'
-          value: servicebusConnectionStringSecretKeyName
+          value: serviceBusConnectionString
         }
       ]
       registries: [
@@ -395,14 +399,14 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
         appPort: BMSDUserInfoAccessorPort
         appId: BMSDUserInfoAccessorServiceContainerAppName
       }
-      secrets: [
+     secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPasswordSecretName
+          value: containerRegistryPassword
         }
         {
           name: 'servicebuskeyref'
-          value: servicebusConnectionStringSecretKeyName
+          value: serviceBusConnectionString
         }
       ]
       registries: [
@@ -500,11 +504,11 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPasswordSecretName
+          value: containerRegistryPassword
         }
         {
           name: 'servicebuskeyref'
-          value: servicebusConnectionStringSecretKeyName
+          value: serviceBusConnectionString
         }
       ]
       registries: [
@@ -583,15 +587,15 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPasswordSecretName
+          value: containerRegistryPassword
         }
         {
           name: 'servicebuskeyref'
-          value: servicebusConnectionStringSecretKeyName
+          value: serviceBusConnectionString
         }
         {
           name: 'signalrkeyref'
-          value: signalRConnectionStringSecretKeyName
+          value: signalRConnectionString
         }
       ]
       registries: [
@@ -675,7 +679,11 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
       secrets: [
         {
           name: 'container-registry-password-ref'
-          value: containerRegistryPasswordSecretName
+          value: containerRegistryPassword
+        }
+        {
+          name: 'servicebuskeyref'
+          value: serviceBusConnectionString
         }
       ]
       registries: [

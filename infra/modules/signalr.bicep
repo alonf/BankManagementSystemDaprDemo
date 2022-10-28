@@ -89,3 +89,6 @@ resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-
   }
 }
 
+//set output key
+output signalRConnectionString string = key
+

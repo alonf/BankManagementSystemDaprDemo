@@ -181,6 +181,7 @@ module daprComponentSignalr 'modules/dapr-component-signalr.bicep' = {
     environmentName: environmentName
     signalRConnectionStringSecretName: signalRConnectionStringSecretKeyName
     signalRName: 'clientcallback'
+    secretStoreName: keyVaultName
     appScope: [
       BMSDNotificationManagerServiceContainerAppName
     ]
@@ -197,6 +198,7 @@ module daprComponentAccountTransactionQueue 'modules/dapr-component-queue.bicep'
   params: {
     queueName:'accounttransactionqueue'
     environmentName: environmentName
+    secretStoreName: keyVaultName
     serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDAccountManagerServiceContainerAppName}'
@@ -215,6 +217,7 @@ module daprComponentCustomerRegistrationQueue 'modules/dapr-component-queue.bice
   params: {
     queueName:'customerregistrationqueue'
     environmentName: environmentName
+    secretStoreName: keyVaultName
     serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDAccountManagerServiceContainerAppName}'
@@ -233,6 +236,7 @@ module daprComponentClientResponseQueue 'modules/dapr-component-queue.bicep' = {
   params: {
     queueName:'clientresponsequeue'
     environmentName: environmentName
+    secretStoreName: keyVaultName
     serviceBusConnectionStringSecretName: servicebusConnectionStringSecretKeyName
     appScope: [
 	  '${BMSDNotificationManagerServiceContainerAppName}'
@@ -250,6 +254,7 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
   name: 'cosmosDBStateStoreDeployment'
   params: {
      statestoreName: 'processedrequests'
+     secretStoreName: keyVaultName
      cosmosDbUrl : cosmosDbUrl
      masterKey : cosmosDBKey
 	 databaseName : cosmosDBDatabaseName

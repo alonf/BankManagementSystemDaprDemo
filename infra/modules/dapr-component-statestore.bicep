@@ -5,6 +5,8 @@ param masterKey string
 param databaseName string
 param collectionName string
 param appScope array
+@secure()
+param secretStoreName string
 
 resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
   name: '${environmentName}/${statestoreName}'
@@ -35,6 +37,7 @@ resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponen
        value: 'false'
       }
     ]
+    secretStoreComponent: secretStoreName
     // Application scopes
     scopes: appScope
   }

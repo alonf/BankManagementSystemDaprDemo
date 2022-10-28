@@ -3,9 +3,11 @@ param environmentName string
 param serviceBusConnectionStringSecretName string
 param queueName string
 param appScope array
+@secure()
+param secretStoreName string
 
 
-resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@2022-03-01' = {
+resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
   name: '${environmentName}/${queueName}'
   properties: {
     componentType: 'bindings.azure.servicebusqueues'
@@ -30,6 +32,7 @@ resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@20
         value: '60'
       }
     ]
+    secretStoreComponent: secretStoreName
     // Application scopes
     scopes: appScope
   }

@@ -11,6 +11,8 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
       family: 'A'
       name: 'standard'
     }
+    enabledForDeployment: true
+    enabledForTemplateDeployment: true
     enableSoftDelete: false
     networkAcls: {
       defaultAction: 'Allow'

@@ -1,7 +1,7 @@
 param keyVaultName string
 param location string
 param objectId string
-
+param bicepRunnerObjectId string
 
 resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
   name: keyVaultName
@@ -29,6 +29,22 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
           secrets: [
               'get'
               'list'
+          ]
+        }
+      }
+      {
+        objectId: bicepRunnerObjectId
+        tenantId: tenant().tenantId
+        permissions: {
+          keys: [
+          'get'
+          'list'
+          'set'
+          ]
+          secrets: [
+              'get'
+              'list'
+              'set'
           ]
         }
       }

@@ -96,7 +96,7 @@ var environmentId = containersAppInfra.outputs.environmentId
 
 //create the secret keyvault
 module keyvault 'modules/keyvault.bicep' = {
-   name: 'keyvault'
+   name: keyVaultName
     params: {
         keyVaultName: keyVaultName
         location: location
@@ -108,7 +108,7 @@ module keyvault 'modules/keyvault.bicep' = {
 }
 
 //add the azure container registry password to the keyvault
-resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   name: '${keyVaultName}/${containerRegistryPasswordSecretName}'
   properties: {
     value: containerRegistryPassword

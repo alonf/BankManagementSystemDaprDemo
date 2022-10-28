@@ -11,6 +11,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
       family: 'A'
       name: 'standard'
     }
+    enableSoftDelete: false
     networkAcls: {
       defaultAction: 'Allow'
       bypass: 'AzureServices'

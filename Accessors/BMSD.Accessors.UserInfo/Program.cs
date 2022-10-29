@@ -307,7 +307,6 @@ namespace BMS.Accessors.UserInfo
 
             //use Dapr to enque the message
             await daprClient.InvokeBindingAsync("clientresponsequeue", "create", responseMessage);
-
         }
     }
 }

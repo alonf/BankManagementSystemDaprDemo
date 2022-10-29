@@ -5,7 +5,7 @@ namespace BMSD.Managers.Account.Contracts.Requests
 {
     internal class CustomerRegistrationInfo
     {
-        [Required(ErrorMessage = "The RequestId is missing")]
+        [Required(ErrorMessage = "The requestId is missing")]
         public string? RequestId { get; set; }
 
         [Required(ErrorMessage = "The callerId is required to enable upstream callback filtering")]
@@ -14,19 +14,19 @@ namespace BMSD.Managers.Account.Contracts.Requests
         [ValidateNever]
         public string SchemaVersion { get; set; } = "1.0";
         
-        [Required(ErrorMessage = "The First Name is missing")]
+        [Required(ErrorMessage = "The first Name is missing")]
         public string? FirstName { get; set; }
         
-        [Required(ErrorMessage = "The Last Name is missing")]
+        [Required(ErrorMessage = "The last Name is missing")]
         public string? LastName { get; set; }
 
-        [Required(ErrorMessage = "The Email is missing")]
+        [Required(ErrorMessage = "The email is missing")]
         [EmailAddress(ErrorMessage = "the Email is not valid")]
         public string? Email { get; set; }
 
 
-        [Required(ErrorMessage = "The Phone Number is missing")]
-        [Phone(ErrorMessage = "The Phone Number is not valid")]
+        [Required(ErrorMessage = "The phone Number is missing")]
+        [Phone(ErrorMessage = "The phone Number is not valid")]
         public string? PhoneNumber { get; set; }
 
         [ValidateNever]

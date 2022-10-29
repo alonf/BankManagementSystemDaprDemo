@@ -21,9 +21,7 @@ namespace BMS.Engines.LiabilityValidator
 
             var app = builder.Build();
 
-            app.MapControllers();
-            //app.UseAuthorization();
-
+            app.UseAuthorization();
 
 
             app.MapGet("/CheckLiability", async (HttpContext httpContext, [FromServices] DaprClient daprClient,

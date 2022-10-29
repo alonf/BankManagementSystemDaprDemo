@@ -5,7 +5,7 @@ namespace BMSD.Managers.Account.Contracts.Requests
 {
     internal class AccountTransactionInfo
     {
-        [Required(ErrorMessage = "The RequestId is missing")]
+        [Required(ErrorMessage = "The requestId is missing")]
         public string? RequestId { get; set; }
 
         [Required(ErrorMessage = "The callerId is required to enable upstream callback filtering")]
@@ -14,10 +14,10 @@ namespace BMSD.Managers.Account.Contracts.Requests
         [ValidateNever]
         public string? SchemaVersion { get; set; } = "1.0";
 
-        [Required(ErrorMessage = "The AccountId is missing")]
+        [Required(ErrorMessage = "The accountId is missing")]
         public string? AccountId { get; set; }
 
-        [Required(ErrorMessage = "The Amount is missing")]
+        [Required(ErrorMessage = "The amount is missing")]
         [Range(0.01, 1000000, ErrorMessage = "The Amount must be between 0.01 and 1000000")]
         public decimal Amount { get; set; }
     }

@@ -27,5 +27,5 @@ jobs:
       env:
         BMSD_SIGNALR_URL: ${{ github.event.inputs.signalr_url }}
         ACCOUNT_MANAGER_URL: ${{ github.event.inputs.account_manager_url }}
-      run: dotnet test --no-build --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
+      run: dotnet test --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
     

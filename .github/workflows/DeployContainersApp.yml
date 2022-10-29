@@ -2,7 +2,8 @@ name: Deploy Azure Container Apps Environment
 
 on:
   workflow_dispatch:
-
+  workflow_call:
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,4 +34,4 @@ jobs:
             cosmosDBKey="${{secrets.COSMOSDB_KEY}}" \
             cosmosDBDatabaseName=BMSDB 
             
-          
+         

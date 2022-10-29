@@ -122,7 +122,7 @@ resource containerRegistryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021
   dependsOn: [
      keyvault   
     ]
-}
+  }
 
 module signalr 'modules/signalr.bicep' = {
   name: 'signalrDeployment'
@@ -255,18 +255,18 @@ module daprComponentClientResponseQueue 'modules/dapr-component-queue.bicep' = {
 module stateStore 'modules/dapr-component-statestore.bicep' = {
   name: 'cosmosDBStateStoreDeployment'
   params: {
-     statestoreName: 'processedrequests'
-     secretStoreName: keyVaultName
-     cosmosDbUrl : cosmosDbUrl
-     masterKey : cosmosDBKey
-	 databaseName : cosmosDBDatabaseName
-	 collectionName : 'statestore'
-	 environmentName: environmentName
-	 appScope: [
-	'${BMSDAccountManagerServiceContainerAppName}'
-	]
-    }
-    dependsOn:  [
+    statestoreName: 'processedrequests'
+    secretStoreName: keyVaultName
+    cosmosDbUrl: cosmosDbUrl
+    masterKey: cosmosDBKey
+    databaseName: cosmosDBDatabaseName
+    collectionName: 'statestore'
+    environmentName: environmentName
+    appScope: [
+      '${BMSDAccountManagerServiceContainerAppName}'
+    ]
+  }
+  dependsOn: [
     containersAppInfra
   ]
 }
@@ -296,7 +296,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
         appId: BMSDCheckingAccountAccessorServiceContainerAppName
         appProtocol: 'http'
       }
-       secrets: [
+      secrets: [
         {
           name: 'container-registry-password-ref'
           value: containerRegistryPassword
@@ -378,7 +378,6 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
     keyvault
   ]
 }
-
 
 
 resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
@@ -554,6 +553,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
         }
       ]
     }
+   }
   }
   dependsOn:  [
     containersAppInfra
@@ -623,7 +623,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
               name: 'ASPNETCORE_URLS'
               value: 'http://localhost:80'
             }
-			{
+ 		        {
               name: 'AZURE__SignalR__ConnectionString'
               secretRef: 'signalrkeyref'
             }
@@ -634,23 +634,24 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
         minReplicas: minReplicas
         maxReplicas: maxReplicas
         rules: [
-        {
-        name: 'queue-based-scaling'
-        custom: {
-            type: 'azure-servicebus'
-            metadata: {
-            queueName: 'clientresponsequeue'
-            messageCount: '1'
-            }
-            auth: [
-              {
-                secretRef: 'servicebuskeyref'
-                triggerParameter: 'connection'
-              }
-            ]
-          }  
-        }
-      ]
+         {
+           name: 'queue-based-scaling'
+           custom: {
+             type: 'azure-servicebus'
+             metadata: {
+               queueName: 'clientresponsequeue'
+               messageCount: '1'
+             }
+             auth: [
+               {
+                 secretRef: 'servicebuskeyref'
+                 triggerParameter: 'connection'
+               }
+             ]
+           } 
+         }
+        ] 
+      }
     }
   }
   dependsOn: [
@@ -660,7 +661,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
     keyvault
     uami
   ]
-}
+ }
 
 
 resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {

@@ -47,7 +47,7 @@ var BMSDLiabilityValidatorEnginePort = 80
 var BMSDLiabilityValidatorEngineIsExternalIngress = false
 
 
-var minReplicas = 0
+var minReplicas = 1
 var maxReplicas = 1
 
 var branch = toLower(last(split(branchName, '/')))

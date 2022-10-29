@@ -316,6 +316,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
       ingress: {
         external: BMSDCheckingAccountAccessorIsExternalIngress
         targetPort: BMSDCheckingAccountAccessorPort
+        transport: 'auto'
       }
     }
     template: {
@@ -418,6 +419,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
       ingress: {
         external: BMSDUserInfoAccessorIsExternalIngress
         targetPort: BMSDUserInfoAccessorPort
+        transport: 'auto'
       }
     }
     template: {
@@ -520,6 +522,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
       ingress: {
         external: BMSDLiabilityValidatorEngineIsExternalIngress
         targetPort: BMSDLiabilityValidatorEnginePort
+        transport: 'auto'
       }
     }
     template: {
@@ -607,6 +610,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
       ingress: {
         external: BMSDNotificationManagerIsExternalIngress
         targetPort: BMSDNotificationManagerPort
+        transport: 'auto'
       }
     }
     template: {
@@ -703,6 +707,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
       ingress: {
         external: BMSDAccountManagerIsExternalIngress
         targetPort: BMSDAccountManagerPort
+        transport: 'auto'
       }
     }
     template: {

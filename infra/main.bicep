@@ -57,8 +57,8 @@ var containerRegistryPasswordSecretName = 'acrpasswordsecretkey'
 var signalRName = '${branch}-bmsd-signalr'
 var signalRConnectionStringSecretKeyName = 'signalrsecretkey'
 
-var servicebusNamespaceName = '${branch}-bmsd-survicebus'
-var servicebusConnectionStringSecretKeyName = 'survicebussecretkey'
+var servicebusNamespaceName = '${branch}-bmsd-servicebus'
+var servicebusConnectionStringSecretKeyName = 'servicebussecretkey'
 
 
 var keyVaultName = '${branch}-bmsd-keyvault'

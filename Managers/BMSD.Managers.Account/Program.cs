@@ -41,13 +41,15 @@ namespace BMSD.Managers.Account
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+            app.UseCloudEvents();
 
             app.MapHealthChecks("/healthz");
             
-            app.UseAuthorization();
-
-
             app.MapControllers();
+            app.MapSubscribeHandler();
 
             app.Run();
         }

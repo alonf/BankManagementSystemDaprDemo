@@ -544,16 +544,15 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
         minReplicas: minReplicas
         maxReplicas: maxReplicas
         rules: [
-          {
-            name: 'http-rule'
-            http: {
-              metadata: {
-                concurrentRequests: '20'
-              }
+        {
+        name: 'http-rule'
+        http: {
+            metadata: {
+            concurrentRequests: '20'
             }
           }
-          ]
-       }
+        }
+      ]
     }
   }
   dependsOn:  [
@@ -635,16 +634,23 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
         minReplicas: minReplicas
         maxReplicas: maxReplicas
         rules: [
-          {
-            name: 'http-rule'
-            http: {
-              metadata: {
-                concurrentRequests: '20'
-              }
+        {
+        name: 'queue-based-scaling'
+        custom: {
+            type: 'azure-servicebus'
+            metadata: {
+            queueName: 'clientresponsequeue'
+            messageCount: '1'
             }
-          }
-        ]
-      }
+            auth: [
+              {
+                secretRef: 'servicebuskeyref'
+                triggerParameter: 'connection'
+              }
+            ]
+          }  
+        }
+      ]
     }
   }
   dependsOn: [
@@ -703,36 +709,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
         {
           image: '${containerRegistry}/${BMSDAccountManagerImage}'
           name: BMSDAccountManagerServiceContainerAppName
-          probes: [
-          {
-             type: 'liveness'
-             initialDelaySeconds: 15
-             periodSeconds: 30
-             failureThreshold: 3
-             timeoutSeconds: 1
-             httpGet: {
-               port: BMSDAccountManagerPort
-               path: '/healthz/liveness'
-             }
-          }
-          {
-                 type: 'startup'
-                 timeoutSeconds: 2
-                 httpGet: {
-                   port: BMSDAccountManagerPort
-                   path: '/healthz/startup'
-             }
-           }
-           {
-            type: 'readiness'
-            timeoutSeconds: 3
-            failureThreshold: 3
-            httpGet: {
-              port: BMSDAccountManagerPort
-              path: '/healthz/readiness'
-            }
-           }
-          ]
+         
       resources: {
         cpu: json('0.5')
         memory: '1.0Gi'

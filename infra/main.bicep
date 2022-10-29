@@ -32,7 +32,7 @@ var BMSDAccountManagerIsExternalIngress = true
 
 var BMSDNotificationManagerImage = 'bmsd.managers.notification:${branchName}'
 var BMSDNotificationManagerPort = 80
-var BMSDNotificationManagerIsExternalIngress = false
+var BMSDNotificationManagerIsExternalIngress = true
 
 var BMSDUserInfoAccessorImage = 'bmsd.accessors.userinfo:${branchName}'
 var BMSDUserInfoAccessorPort = 80
@@ -65,11 +65,11 @@ var keyVaultName = '${branch}-bmsd-keyvault'
 var environmentName = '${branch}-bmsd-env'
 var workspaceName = '${branch}-log-analytics'
 var appInsightsName = '${branch}-app-insights'
-var BMSDAccountManagerServiceContainerAppName = '${branch}-accountmanager' 
-var BMSDNotificationManagerServiceContainerAppName = '${branch}-notificationmanager'
-var BMSDUserInfoAccessorServiceContainerAppName = '${branch}-userinfoaccessor' 
-var BMSDCheckingAccountAccessorServiceContainerAppName = '${branch}-checkingaccountaccessor'
-var BMSDLiabilityValidatorEngineServiceContainerAppName = '${branch}-liabilityvalidatorengine' 
+var BMSDAccountManagerServiceContainerAppName = 'accountmanager' 
+var BMSDNotificationManagerServiceContainerAppName = 'notificationmanager'
+var BMSDUserInfoAccessorServiceContainerAppName = 'userinfoaccessor' 
+var BMSDCheckingAccountAccessorServiceContainerAppName = 'checkingaccountaccessor'
+var BMSDLiabilityValidatorEngineServiceContainerAppName = 'liabilityvalidatorengine' 
 
 //create the assigned user managed identity
 module uami 'modules/identity.bicep' = {
@@ -331,7 +331,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
           env: [
             {
               name: 'ASPNETCORE_URLS'
-              value: 'http://localhost:80'
+              value: 'http://*:80'
             }
             {
               name: 'CosmosDbConnectionString'
@@ -434,7 +434,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
           env: [
             {
               name: 'ASPNETCORE_URLS'
-              value: 'http://localhost:80'
+              value: 'http://*:80'
             }
             {
               name: 'CosmosDbConnectionString'
@@ -537,7 +537,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
           env: [
             {
               name: 'ASPNETCORE_URLS'
-              value: 'http://localhost:80'
+              value: 'http://*:80'
             }
           ]
         }
@@ -625,7 +625,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
           env: [
             {
               name: 'ASPNETCORE_URLS'
-              value: 'http://localhost:80'
+              value: 'http://*:80'
             }
  		        {
               name: 'AZURE__SignalR__ConnectionString'
@@ -723,7 +723,7 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
       env: [
       {
           name: 'ASPNETCORE_URLS'
-          value: 'http://localhost:80'
+          value: 'http://*:80'
       }
     ]
     }

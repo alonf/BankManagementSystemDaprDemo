@@ -1,0 +1,22 @@
+name: Full CI CD Workflow
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  call-ci-workflow:
+    uses: ./.github/workflows/IntegrationTest.yml
+  call-deploy-docker-images-workflow:
+    uses: ./.github/workflows/PushDockerImages.yml
+  call-deploy-containers-app-workflow:
+    uses: ./.github/workflows/DeployContainersApp.yml
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sleep for 120 seconds to let the ACA finished deployment
+      run: sleep 120s
+      shell: bash
+  call-test-deployed-conatainers-app-workflow:
+    uses: ./.github/workflows/ContainersAppIntegrationTest.yml
+            
+   

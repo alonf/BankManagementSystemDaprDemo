@@ -4,18 +4,16 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>fdb95a46-c9c5-4de3-ab3e-c4ac980251a9</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
-	  <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.31.0" />
-	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-	  <PackageReference Include="Dapr.AspNetCore" Version="1.9.0" />
-	  <PackageReference Include="NJsonSchema" Version="10.8.0" />
+	<PackageReference Include="Dapr.AspNetCore" Version="1.9.0" />
+	<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.31.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	<PackageReference Include="NJsonSchema" Version="10.8.0" />
   </ItemGroup>
 
 </Project>

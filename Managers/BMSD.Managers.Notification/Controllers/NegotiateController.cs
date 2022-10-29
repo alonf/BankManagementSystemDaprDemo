@@ -34,13 +34,6 @@ namespace BMSD.Managers.Notification.Controllers
             return NegotiateBase(user, _accountManagerCallbackHubContext!);
         }
 
-        [HttpGet("/liveness")]
-        public Task<ActionResult> Liveness()
-        {
-            return Task.FromResult<ActionResult>(Ok());
-        }
-        
-        
         private async Task<ActionResult> NegotiateBase(string user, ServiceHubContext serviceHubContext)
         {
             if (string.IsNullOrEmpty(user))

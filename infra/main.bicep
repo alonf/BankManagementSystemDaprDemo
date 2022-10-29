@@ -32,22 +32,22 @@ var BMSDAccountManagerIsExternalIngress = true
 
 var BMSDNotificationManagerImage = 'bmsd.managers.notification:${branchName}'
 var BMSDNotificationManagerPort = 80
-var BMSDNotificationManagerIsExternalIngress = true
+var BMSDNotificationManagerIsExternalIngress = false
 
 var BMSDUserInfoAccessorImage = 'bmsd.accessors.userinfo:${branchName}'
 var BMSDUserInfoAccessorPort = 80
-var BMSDUserInfoAccessorIsExternalIngress = true
+var BMSDUserInfoAccessorIsExternalIngress = false
 
 var BMSDCheckingAccountAccessorImage = 'bmsd.accessors.checkingaccount:${branchName}'
 var BMSDCheckingAccountAccessorPort = 80
-var BMSDCheckingAccountAccessorIsExternalIngress = true
+var BMSDCheckingAccountAccessorIsExternalIngress = false
 
 var BMSDLiabilityValidatorEngineImage  = 'bmsd.engines.liabilityvalidator:${branchName}'
 var BMSDLiabilityValidatorEnginePort = 80
-var BMSDLiabilityValidatorEngineIsExternalIngress = true
+var BMSDLiabilityValidatorEngineIsExternalIngress = false
 
 
-var minReplicas = 0
+var minReplicas = 1
 var maxReplicas = 1
 
 var branch = toLower(last(split(branchName, '/')))

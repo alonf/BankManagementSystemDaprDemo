@@ -3,6 +3,9 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "bmsd.managers.account",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/v1.0/invoke/swagger/method/swagger",
       "serviceActions": {
         "bmsd.accessors.userinfo": "StartDebugging",
         "bmsd.engines.liabilityvalidator": "StartDebugging",

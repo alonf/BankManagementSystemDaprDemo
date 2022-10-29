@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BMSD.Managers.Account.Contracts.Requests
 {
-    internal class AccountTransactionInfo
+    public class AccountTransactionInfo
     {
         [Required(ErrorMessage = "The RequestId is missing")]
         public string? RequestId { get; set; }

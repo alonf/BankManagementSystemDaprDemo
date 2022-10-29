@@ -36,15 +36,15 @@ var BMSDNotificationManagerIsExternalIngress = true
 
 var BMSDUserInfoAccessorImage = 'bmsd.accessors.userinfo:${branchName}'
 var BMSDUserInfoAccessorPort = 80
-var BMSDUserInfoAccessorIsExternalIngress = false
+var BMSDUserInfoAccessorIsExternalIngress = true
 
 var BMSDCheckingAccountAccessorImage = 'bmsd.accessors.checkingaccount:${branchName}'
 var BMSDCheckingAccountAccessorPort = 80
-var BMSDCheckingAccountAccessorIsExternalIngress = false
+var BMSDCheckingAccountAccessorIsExternalIngress = true
 
 var BMSDLiabilityValidatorEngineImage  = 'bmsd.engines.liabilityvalidator:${branchName}'
 var BMSDLiabilityValidatorEnginePort = 80
-var BMSDLiabilityValidatorEngineIsExternalIngress = false
+var BMSDLiabilityValidatorEngineIsExternalIngress = true
 
 
 var minReplicas = 0

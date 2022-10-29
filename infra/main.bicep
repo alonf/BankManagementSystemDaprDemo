@@ -751,3 +751,6 @@ resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-
 }
 
 output webServiceUrl string = BMSDAccountManagerContainerApp.properties.latestRevisionFqdn
+
+//todo: add diagnostic setting to all resources: https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/resource-manager-diagnostic-settings?tabs=bicep
+        

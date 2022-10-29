@@ -15,10 +15,6 @@ param cosmosDBConnectionString string
 param containerRegistryPassword string
 
 @secure()
-param bicepRunnerObjectId string
-
-
-@secure()
 param cosmosDBKey string
 
 param tags object = {}
@@ -104,7 +100,6 @@ module keyvault 'modules/keyvault.bicep' = {
         keyVaultName: keyVaultName
         location: location
         objectId: managedIdentityObjectId
-        bicepRunnerObjectId: bicepRunnerObjectId
         tenantId: tenant().tenantId
     }
     dependsOn: [

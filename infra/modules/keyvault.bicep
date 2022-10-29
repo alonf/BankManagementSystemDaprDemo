@@ -1,7 +1,6 @@
 param keyVaultName string
 param location string
 param objectId string
-param bicepRunnerObjectId string
 param tenantId string
 
 resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
@@ -29,19 +28,6 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
           ]
         }
       }
-      //{
-      //    //the current user principle
-      //  objectId:  bicepRunnerObjectId
-      //  tenantId: tenantId
-      //  permissions: {
-      //    keys: [
-      //    'all'
-      //    ]
-      //    secrets: [
-      //        'all' 
-      //    ]
-      //  }
-      //}
     ]
   }
 }

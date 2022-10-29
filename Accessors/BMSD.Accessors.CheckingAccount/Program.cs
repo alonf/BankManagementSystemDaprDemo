@@ -40,7 +40,8 @@ namespace BMSD.Accessors.CheckingAccount
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseHttpsRedirection();
+            
             app.MapHealthChecks("/healthz");
 
             app.UseAuthorization();

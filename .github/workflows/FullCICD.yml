@@ -7,16 +7,20 @@ jobs:
   call-ci-workflow:
     uses: ./.github/workflows/IntegrationTest.yml
   call-deploy-docker-images-workflow:
+    needs: call-ci-workflow
     uses: ./.github/workflows/PushDockerImages.yml
   call-deploy-containers-app-workflow:
+    needs: call-deploy-docker-images-workflow
     uses: ./.github/workflows/DeployContainersApp.yml
-  build:
+  delay:
     runs-on: ubuntu-latest
+    needs: call-deploy-containers-app-workflow
     steps:
     - name: Sleep for 120 seconds to let the ACA finished deployment
       run: sleep 120s
       shell: bash
   call-test-deployed-conatainers-app-workflow:
+    needs: delay
     uses: ./.github/workflows/ContainersAppIntegrationTest.yml
             
    

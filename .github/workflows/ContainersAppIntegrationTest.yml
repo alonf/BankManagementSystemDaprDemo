@@ -19,10 +19,10 @@ jobs:
     - name: Find containers app urls 
       run: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          export AccountManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"')
-          export NotificationManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notificationmanager --query properties.configuration.ingress.fqdn | tr -d '"')
-          echo "Account Manager Url: $AccountManagerFQDN"
-          echo "Notification Manager Url: $NotificationManagerFQDN"
+          echo "AccountManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"') >> $GITHUB_ENV"
+          echo "NotificationManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notificationmanager --query properties.configuration.ingress.fqdn | tr -d '"')>> $GITHUB_ENV"
+          echo "Account Manager Url: ${{ env.AccountManagerFQDN }}"
+          echo "Notification Manager Url: ${{ env.NotificationManagerFQDN }}"
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET

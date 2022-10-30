@@ -7,16 +7,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: test
     defaults:
       run:
         shell: bash
     steps:
-    - name: find containers app urls
-      run: |
-        export AccountManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
-        export NotificationManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name notifiactionmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
-        echo "Account Manager Url: $AccountManagerFQDN"
-        echo "Notification Manager Url: $NotificationManagerFQDN"
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Find containers app urls 
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt'
+          export AccountManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
+          export NotificationManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name notifiactionmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
+          echo "Account Manager Url: $AccountManagerFQDN"
+          echo "Notification Manager Url: $NotificationManagerFQDN"
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET

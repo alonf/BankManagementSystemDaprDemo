@@ -19,10 +19,14 @@ jobs:
     - name: Find containers app urls 
       run: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          echo "ACCOUNT_MANAGER_URL=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"')" >> $GITHUB_ENV
-          echo "BMSD_SIGNALR_URL=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notificationmanager --query properties.configuration.ingress.fqdn | tr -d '"')" >> $GITHUB_ENV
-          echo "Account Manager Url: ${{ env.ACCOUNT_MANAGER_URL }}"
-          echo "Notification Manager Url: ${{ env.BMSD_SIGNALR_URL }}"
+          export AccoountManagerUrl=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"')
+          export SignalRUrl=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notificationmanager --query properties.configuration.ingress.fqdn | tr -d '"')
+          echo "Account Manager Url: $AccoountManagerUrl"
+          echo "Notification Manager Url: $SignalRUrl"
+      env:
+        ACCOUNT_MANAGER_URL : $AccoountManagerUrl
+        BMSD_SIGNALR_URL : $SignalRUrl
+        
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET
@@ -34,5 +38,9 @@ jobs:
       #env:
       #  BMSD_SIGNALR_URL: ${{ env.NotificationManagerFQDN }}
       #  ACCOUNT_MANAGER_URL: ${{ env.AccountManagerFQDN }}
-      run: dotnet test --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
+      run: |
+        echo testing ACA deployment 
+        echo with manager url: ${{ env.ACCOUNT_MANAGER_URL }}
+        echo and notification url: ${{ env.BMSD_SIGNALR_URL }}
+        dotnet test --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
     

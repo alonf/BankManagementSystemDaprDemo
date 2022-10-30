@@ -23,8 +23,8 @@ jobs:
           export SignalRUrl=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notificationmanager --query properties.configuration.ingress.fqdn | tr -d '"')
           echo "Account Manager Url: $AccoountManagerUrl"
           echo "Notification Manager Url: $SignalRUrl"
-          echo "ACCOUNT_MANAGER_URL=$AccoountManagerUrl" >> $GITHUB_ENV
-          echo "BMSD_SIGNALR_URL=$SignalRUrl"  >> $GITHUB_ENV
+          echo "ACCOUNT_MANAGER_URL=https://$AccoountManagerUrl" >> $GITHUB_ENV
+          echo "BMSD_SIGNALR_URL=https://$SignalRUrl"  >> $GITHUB_ENV
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET

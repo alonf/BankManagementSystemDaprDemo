@@ -4,21 +4,26 @@ on:
   workflow_dispatch:
   
 jobs:
-  deployment:
+  call-ci-workflow:
+    uses: ./.github/workflows/IntegrationTest.yml
+    secrets: inherit
+  call-deploy-docker-images-workflow:
+    needs: call-ci-workflow
+    uses: ./.github/workflows/PushDockerImages.yml
+    secrets: inherit
+  call-deploy-containers-app-workflow:
+    needs: call-deploy-docker-images-workflow
+    uses: ./.github/workflows/DeployContainersApp.yml
+    secrets: inherit
+  delay:
     runs-on: ubuntu-latest
-    environment: test
+    needs: call-deploy-containers-app-workflow
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Run CI Workflow
-      uses: ./.github/workflows/IntegrationTest.yml
-    - name: Deploy Docker Images
-      uses: ./.github/workflows/PushDockerImages.yml
-    - name: Deploy Azure Containers App
-      uses: ./.github/workflows/DeployContainersApp.yml
-    - name: Wait to let deployment finelized 
+    - name: Sleep for 120 seconds to let the ACA finished deployment
       run: sleep 120s
       shell: bash
-    - name: Test the deployment services
-      uses: ./.github/workflows/ContainersAppIntegrationTest.yml
-            
+  call-test-deployed-conatainers-app-workflow:
+    needs: delay
+    uses: ./.github/workflows/ContainersAppIntegrationTest.yml
+    secrets: inherit
+    

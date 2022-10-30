@@ -6,11 +6,18 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+    - '.github/**'
+    - 'infra/**'
    
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - master
+    paths-ignore:
+    - '.github/**'
+    - 'infra/**'
+    
 env:
   CosmosDbConnectionString: ${{ secrets.BMSD_COSMOSDB_CONNECTION_STRING }}
   SignalRConnectionString: ${{ secrets.BMSD_SIGNALR_CONNECTION_STRING }}

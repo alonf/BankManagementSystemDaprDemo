@@ -18,7 +18,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Find containers app urls 
       run: |
-          az config set extension.use_dynamic_install=yes_without_prompt'
+          az config set extension.use_dynamic_install=yes_without_prompt
           export AccountManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"')
           export NotificationManagerFQDN=$(az containerapp show --resource-group "bmsd-cont-app-rg" --name notifiactionmanager --query properties.configuration.ingress.fqdn | tr -d '"')
           echo "Account Manager Url: $AccountManagerFQDN"

@@ -2,13 +2,8 @@ name: Containers App Integration Tests
 
 on:
   workflow_dispatch:
-    inputs:
-      signalr_url:
-        description: 'The SignalR Client Negotiate Url'
-        required: true
-      account_manager_url:
-        description: 'The Account Manager Service Url'
-        required: true 
+  workflow_call:
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,9 +18,13 @@ jobs:
       with:
         dotnet-version: |
           6.0.x
+    - name: find containers app urls
+      run: |
+        export accountManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
+        export notificationManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
     - name: Test
       env:
-        BMSD_SIGNALR_URL: ${{ github.event.inputs.signalr_url }}
-        ACCOUNT_MANAGER_URL: ${{ github.event.inputs.account_manager_url }}
+        BMSD_SIGNALR_URL: ${{ env.notificationManagerFQDN }}
+        ACCOUNT_MANAGER_URL: ${{ env.notificationManagerFQDN }}
       run: dotnet test --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
     

@@ -11,6 +11,12 @@ jobs:
       run:
         shell: bash
     steps:
+    - name: find containers app urls
+      run: |
+        export AccountManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
+        export NotificationManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name notifiactionmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
+        echo "Account Manager Url: $AccountManagerFQDN"
+        echo "Notification Manager Url: $NotificationManagerFQDN"
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Setup .NET
@@ -18,13 +24,9 @@ jobs:
       with:
         dotnet-version: |
           6.0.x
-    - name: find containers app urls
-      run: |
-        export accountManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
-        export notificationManagerFQDN=`az containerapp show --resource-group "bmsd-cont-app-rg" --name accountmanager --query properties.configuration.ingress.fqdn | tr -d '"'`
     - name: Test
       env:
-        BMSD_SIGNALR_URL: ${{ env.notificationManagerFQDN }}
-        ACCOUNT_MANAGER_URL: ${{ env.notificationManagerFQDN }}
+        BMSD_SIGNALR_URL: ${{ env.NotificationManagerFQDN }}
+        ACCOUNT_MANAGER_URL: ${{ env.AccountManagerFQDN }}
       run: dotnet test --verbosity normal --configuration Release Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
     

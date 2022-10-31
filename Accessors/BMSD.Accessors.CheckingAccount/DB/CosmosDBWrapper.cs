@@ -27,7 +27,7 @@ namespace BMSD.Accessors.CheckingAccount.DB
                 .Where(a => a.Id == accountId).AsEnumerable().FirstOrDefault();
                
             if (accountInfo != null)
-                return accountInfo!;
+                return accountInfo;
 
             //else, first record for the account
 
@@ -159,12 +159,6 @@ namespace BMSD.Accessors.CheckingAccount.DB
                 //get the account record
                 var accountInfo = await GetAccountInfoAsync(accountId);
 
-                if (accountInfo == null)
-                {
-                    _logger.LogWarning($"GetAccountTransactionHistoryAsync: account id: {accountId} not found");
-                    return null;
-                }
-
                 var transactionIds = accountInfo.AccountTransactions.Skip(Math.Max(accountInfo.AccountTransactions.Count - numberOfTransactions, 0));
 
                 var container = _cosmosClient.GetContainer(_databaseName, AccountTransactionName);
@@ -227,7 +221,7 @@ namespace BMSD.Accessors.CheckingAccount.DB
                 };
 
                 var container = _cosmosClient.GetContainer(_databaseName, AccountInfoName);
-                var replaceItemResponse = await container.ReplaceItemAsync(accountInfo, accountInfo.Id, null, itemRequestOptions);
+                await container.ReplaceItemAsync(accountInfo, accountInfo.Id, null, itemRequestOptions);
             }
             catch (Exception ex)
             {

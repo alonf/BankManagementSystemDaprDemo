@@ -35,13 +35,10 @@ namespace BMSD.Managers.Notification
             return Task.CompletedTask;
         }
 
-        private static Task Dispose(ServiceHubContext hubContext)
+        // ReSharper disable once UnusedMember.Local
+        private static Task Dispose(IServiceHubContext? hubContext)
         {
-            if (hubContext == null)
-            {
-                return Task.CompletedTask;
-            }
-            return hubContext.DisposeAsync();
+            return hubContext == null ? Task.CompletedTask : hubContext.DisposeAsync();
         }
     }
 }

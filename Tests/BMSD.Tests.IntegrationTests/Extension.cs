@@ -6,7 +6,7 @@ namespace BMSD.Tests.IntegrationTests;
 
 public static class Extension
 {
-    private static readonly Random _jitterer = new Random();
+    private static readonly Random Jitterer = new Random();
     public static IHttpClientBuilder AddRobustHttpClient<TClient, TImplementation>(
         this IServiceCollection services, int retryCount = 5,
         int handledEventsAllowedBeforeBreaking = 5, int durationOfBreakInSeconds = 30, string baseUrl = null)
@@ -40,7 +40,7 @@ public static class Extension
             .HandleTransientHttpError()
             .WaitAndRetryAsync(retryCount, // exponential back-off plus some jitter
                 retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
-                                + TimeSpan.FromMilliseconds(_jitterer.Next(0, 100)));
+                                + TimeSpan.FromMilliseconds(Jitterer.Next(0, 100)));
     }
 
     private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(

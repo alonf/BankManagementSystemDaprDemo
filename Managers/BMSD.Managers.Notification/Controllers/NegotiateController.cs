@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.SignalR.Management;
-using Microsoft.Extensions.Configuration;
 
 namespace BMSD.Managers.Notification.Controllers
 {

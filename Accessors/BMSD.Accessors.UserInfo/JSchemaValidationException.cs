@@ -1,8 +1,6 @@
-﻿using NJsonSchema;
+﻿using System.Runtime.Serialization;
 
-using System.Runtime.Serialization;
-
-namespace BMS.Accessors.UserInfo
+namespace BMSD.Accessors.UserInfo
 {
     [Serializable]
     internal class JSchemaValidationException : Exception

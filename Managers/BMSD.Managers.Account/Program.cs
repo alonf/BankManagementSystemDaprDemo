@@ -53,7 +53,7 @@ namespace BMSD.Managers.Account
                 };
 
                 //endpoint for simple test
-                app.MapGet("/Test", async (HttpContext httpContext) =>
+                app.MapGet("/Test", async httpContext =>
                 {
                     var response = new
                     {

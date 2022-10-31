@@ -1,7 +1,4 @@
-﻿using Microsoft.Azure.SignalR;
-using Newtonsoft.Json;
-
-namespace BMSD.Managers.Notification.Contracts
+﻿namespace BMSD.Managers.Notification.Contracts
 {
     public class SignalRMessage
     {

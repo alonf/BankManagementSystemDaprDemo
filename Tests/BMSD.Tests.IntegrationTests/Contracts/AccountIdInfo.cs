@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BMSD.Tests.IntegrationTests.Contracts;
+﻿namespace BMSD.Tests.IntegrationTests.Contracts;
 
 public class AccountIdInfo
 {

@@ -9,12 +9,10 @@ namespace BMSD.Tests.IntegrationTests
     {
         private readonly HttpClient _httpClient;
         private readonly ISignalRWrapper _signalR;
-        private readonly ITestOutputHelper _testOutputHelper;
 
         public IntegrationTest(IHttpClientFactory httpClientFactory, ISignalRWrapperFactory signalRWrapperFactory, ITestOutputHelper testOutputHelper)
         {
             _signalR = signalRWrapperFactory.Create(testOutputHelper);
-            _testOutputHelper = testOutputHelper;
             _httpClient = httpClientFactory.CreateClient("IntegrationTest");
         }
         private JsonSerializerOptions SerializeOptions => new JsonSerializerOptions

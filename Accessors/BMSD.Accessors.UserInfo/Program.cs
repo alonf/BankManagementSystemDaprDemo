@@ -1,15 +1,13 @@
-using Dapr.Client;
 using System.Net;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Dapr.Client;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using NJsonSchema;
-using BMSD.Accessors.UserInfo;
-using System.Text;
 
-namespace BMS.Accessors.UserInfo
+namespace BMSD.Accessors.UserInfo
 {
     public class UserInfoAccessor
     {
@@ -61,10 +59,6 @@ namespace BMS.Accessors.UserInfo
                     }))
                 .Build();
 
-            app.MapGet("/liveness", async (HttpContext httpContext) =>
-            {
-                await httpContext.Response.WriteAsync("OK");
-            });
             
             //Register Customer
             app.MapPost("/customerregistrationqueue", async (HttpContext httpContext,
@@ -216,7 +210,7 @@ namespace BMS.Accessors.UserInfo
                     do
                     {
                         var result = await iterator.ReadNextAsync();
-                        var ids = result.Select(r => "\"" + JsonObject.Parse(r.ToString())!["id"]!.ToString() + "\"").Cast<string>();
+                        var ids = result.Select(r => "\"" + JsonNode.Parse(r.ToString())!["id"]! + "\"");
                         accountIds.AddRange(ids);
                         charge += result.RequestCharge;
                     } while (iterator.HasMoreResults);

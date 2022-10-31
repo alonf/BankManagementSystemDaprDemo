@@ -40,7 +40,7 @@ namespace BMSD.Accessors.CheckingAccount
 
          
             //Update Account from queue
-            app.MapPost("/accounttransactionqueue", async (HttpContext httpContext,
+            app.MapPost("/accounttransactionqueue", async (
                     [FromServices] DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
                     [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromBody] AccountTransactionRequest requestItem) =>
                 {
@@ -84,7 +84,7 @@ namespace BMSD.Accessors.CheckingAccount
                     return Results.Ok();
                 });
 
-            app.MapGet("/GetBalance", async (HttpContext httpContext,
+            app.MapGet("/GetBalance", async (
                 [FromServices] DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
                 [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
             {
@@ -113,8 +113,8 @@ namespace BMSD.Accessors.CheckingAccount
             });
 
             
-            app.MapGet("/GetAccountInfo", async (HttpContext httpContext,
-                DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+            app.MapGet("/GetAccountInfo", async (
+                [FromServices] ILogger<CheckingAccountAccessor> logger,
                 [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId) =>
             {
                 logger.LogInformation("GetAccountInfo HTTP trigger processed a request.");
@@ -138,8 +138,7 @@ namespace BMSD.Accessors.CheckingAccount
             });
 
 
-            app.MapGet("/GetAccountTransactionHistory", async (HttpContext httpContext,
-                DaprClient daprClient, [FromServices] ILogger<CheckingAccountAccessor> logger,
+            app.MapGet("/GetAccountTransactionHistory", async ([FromServices] ILogger<CheckingAccountAccessor> logger,
                 [FromServices] ICosmosDBWrapper cosmosDBWrapper, [FromQuery] string accountId, [FromQuery] int? numberOfTransactions) =>
             {
                 logger.LogInformation("GetAccountTransactionHistory HTTP trigger processed a request.");

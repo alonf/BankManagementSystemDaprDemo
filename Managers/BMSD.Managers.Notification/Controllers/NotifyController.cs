@@ -16,7 +16,7 @@ namespace BMSD.Managers.Notification.Controllers
         }
 
         [HttpPost("/clientresponsequeue")]
-        public async Task<IActionResult> AccountCallbackHandlerAsync([FromBody] Contracts.AccountCallbackRequest accountCallbackRequest)
+        public async Task<IActionResult> AccountCallbackHandlerAsync([FromBody] AccountCallbackRequest accountCallbackRequest)
         {
             try
             {

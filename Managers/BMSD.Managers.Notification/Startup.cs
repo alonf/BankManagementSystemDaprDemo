@@ -18,6 +18,17 @@ namespace BMSD.Managers.Notification
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+            //add CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+            
             services
                 .AddSingleton<SignalRService>()
                 .AddHostedService(sp => sp.GetService<SignalRService>())

@@ -18,17 +18,18 @@ namespace BMSD.Managers.Notification
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+
             //add CORS
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
+                                  });
             });
-            
+
             services
                 .AddSingleton<SignalRService>()
                 .AddHostedService(sp => sp.GetService<SignalRService>())
@@ -40,6 +41,8 @@ namespace BMSD.Managers.Notification
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            app.UseCors(MyAllowSpecificOrigins);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

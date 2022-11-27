@@ -3,6 +3,7 @@ namespace BMSD.Managers.Account
     using AutoMapper;
     using Contracts.Responses;
     using Dapr.Client;
+    using Google.Api;
     using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
@@ -22,6 +23,17 @@ namespace BMSD.Managers.Account
 
                 // Add services to the container.
                 builder.Services.AddAuthorization();
+                //add CORS
+                var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy(name: MyAllowSpecificOrigins,
+                                      policy =>
+                                      {
+                                          policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
+                                      });
+                });
+                
                 builder.Services.AddControllers().AddDapr().AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -43,6 +55,7 @@ namespace BMSD.Managers.Account
                 var app = builder.Build();
 
                 app.MapHealthChecks("/healthz");
+                app.UseCors(MyAllowSpecificOrigins);
                 app.UseAuthorization();
 
 

@@ -189,7 +189,7 @@ namespace BMSD.Accessors.UserInfo
                 {
                     logger.LogInformation("GetAccountIdByEmail HTTP processed a request.");
 
-                    string email = httpContext.Request.Query["email"];
+                    string? email = httpContext?.Request?.Query["email"];
 
                     if (string.IsNullOrEmpty(email))
                     {

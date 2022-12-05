@@ -44,7 +44,7 @@ namespace BMSD.Engines.LiabilityValidator
                         return Results.Problem("Expecting the amount parameter");
                     }
 
-                    decimal amount = decimal.Parse(amountText);
+                    decimal amount = decimal.Parse(amountText!);
 
 
                     var getBalanceResult = await daprClient.InvokeMethodAsync<JsonObject>(HttpMethod.Get, "checkingaccountaccessor", $"GetBalance?accountId={accountId}");

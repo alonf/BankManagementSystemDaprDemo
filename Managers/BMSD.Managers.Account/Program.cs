@@ -178,7 +178,7 @@ namespace BMSD.Managers.Account
                             return Results.Problem("Expecting the account id");
                         }
 
-                        string numberOfTransactions = httpContext.Request.Query["numberOfTransactions"];
+                        string? numberOfTransactions = httpContext?.Request.Query["numberOfTransactions"];
 
                         if (string.IsNullOrEmpty(numberOfTransactions))
                         {

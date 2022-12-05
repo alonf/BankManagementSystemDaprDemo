@@ -15,14 +15,19 @@ jobs:
         include:
           - dockerfile: ./Managers/BMSD.Managers.Account/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.managers.account
+            application_name: accountmanager
           - dockerfile: ./Managers/BMSD.Managers.Notification/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.managers.notification
+            application_name: notificationmanager
           - dockerfile: ./Accessors/BMSD.Accessors.CheckingAccount/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.accessors.checkingaccount
+            application_name: checkingaccountaccessor
           - dockerfile: ./Accessors/BMSD.Accessors.UserInfo/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.accessors.userinfo
+            application_name: userinfoaccessor
           - dockerfile: ./Engines/BMSD.Engines.LiabilityValidator/Dockerfile
             image: bmsdcr.azurecr.io/bmsd.engines.liabilityvalidator
+            application_name: liabilityvalidatorengine
     permissions:
       contents: read
       packages: write
@@ -49,4 +54,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           
+      - name: Update containers app revision
+        run: az containerapp update --name ${{ matrix.application_name }} --resource-group bmsd-cont-app-rg --image ${{ matrix.image }}

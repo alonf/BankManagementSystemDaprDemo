@@ -39,7 +39,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: |
-          6.0.x
+          7.0.x
     - name: Docker Compose Up
       run: docker compose -f docker-compose.yml -f docker-compose-github-test.yml up -d
     - name: Restore dependencies

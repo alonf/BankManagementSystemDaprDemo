@@ -27,7 +27,7 @@ namespace BMSD.Managers.Notification.Controllers
             if (string.IsNullOrEmpty(user))
                 return Task.FromResult<ActionResult>(BadRequest("User is not set in the x-application-user-id header"));
 
-            return NegotiateBase(user, _accountManagerCallbackHubContext!);
+            return NegotiateBase(user!, _accountManagerCallbackHubContext!);
         }
 
         [HttpGet("/liveness")]

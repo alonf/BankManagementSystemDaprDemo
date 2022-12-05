@@ -62,4 +62,4 @@ jobs:
       - name: Update containers app revision
         run: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          az containerapp update --name ${{ matrix.application_name }}:${{steps.meta.outputs.tags}} --resource-group bmsd-cont-app-rg --image ${{ matrix.image }}
+          az containerapp update --name ${{ matrix.application_name }} --resource-group bmsd-cont-app-rg --image ${{ matrix.image }}:${{steps.meta.outputs.tags}}

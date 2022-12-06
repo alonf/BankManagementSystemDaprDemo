@@ -63,4 +63,4 @@ jobs:
           azcliversion: 2.30.0
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp update --name ${{ matrix.application_name }} --resource-group bmsd-cont-app-rg --image ${{ matrix.image }}:${GITHUB_REF#refs/heads/}
+            az containerapp update --name ${{ matrix.application_name }} --resource-group bmsd-cont-app-rg --image bmsdcr.azurecr.io/${{ matrix.image }}:${GITHUB_REF#refs/heads/}

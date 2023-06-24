@@ -5,7 +5,7 @@ param appScope array
 param clientId string
 
 
-resource kvSecretStoreComponent 'Microsoft.App/managedEnvironments/daprComponents@2022-03-01' = {
+resource kvSecretStoreComponent 'Microsoft.App/managedEnvironments/daprComponents@2022-10-01' = {
   name: '${environmentName}/${keyvaultName}'
   properties: {
     componentType: 'secretstores.azure.keyvault'

@@ -1,64 +1,63 @@
 ﻿using System.Text.Json;
 
-namespace BMSD.Managers.Notification
+namespace BMSD.Managers.Notification;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers().AddJsonOptions(options =>
         {
-            Configuration = configuration;
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
+
+        //add CORS
+        const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: myAllowSpecificOrigins,
+                policy =>
+                {
+                    policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
+                });
+        });
+
+        services
+            .AddSingleton<SignalRService>()
+            .AddHostedService(sp => sp.GetService<SignalRService>()!)
+            .AddSingleton<IHubContextStore>(sp => sp.GetService<SignalRService>()!)
+            .AddDaprClient();
+
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        app.UseCors(myAllowSpecificOrigins);
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
         }
 
-        public IConfiguration Configuration { get; }
+        app.UseRouting();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        app.UseEndpoints(endpoints =>
         {
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            });
-
-            //add CORS
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.AllowAnyOrigin().WithMethods("PUT", "POST", "DELETE", "GET");
-                                  });
-            });
-
-            services
-                .AddSingleton<SignalRService>()
-                .AddHostedService(sp => sp.GetService<SignalRService>())
-                .AddSingleton<IHubContextStore>(sp => sp.GetService<SignalRService>()!)
-                .AddDaprClient();
-
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-            app.UseCors(MyAllowSpecificOrigins);
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+            endpoints.MapControllers();
+        });
     }
 }

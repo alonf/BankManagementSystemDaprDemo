@@ -1,8 +1,7 @@
 ﻿
-namespace BMSD.Managers.Account.Contracts.Responses
+namespace BMSD.Managers.Account.Contracts.Responses;
+
+internal class AccountIdInfo
 {
-    internal class AccountIdInfo
-    {
-        public string[]? AccountIds { get; set; }
-    }
+    public string[]? AccountIds { get; set; }
 }

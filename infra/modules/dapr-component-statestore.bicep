@@ -8,7 +8,7 @@ param appScope array
 @secure()
 param secretStoreName string
 
-resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
+resource daprComponentStateStore 'Microsoft.App/managedEnvironments/daprComponents@2022-10-01' = {
   name: '${environmentName}/${statestoreName}'
   properties: {
     componentType: 'state.azure.cosmosdb'

@@ -266,13 +266,13 @@ module stateStore 'modules/dapr-component-statestore.bicep' = {
   ]
 }
 
-resource uamiResource 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' existing = {
+resource uamiResource 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: uamiName
 }
 
 
 
-resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: BMSDCheckingAccountAccessorServiceContainerAppName
   tags: tags
   location: location
@@ -375,7 +375,7 @@ resource BMSDCheckingAccountAccessorContainerApp 'Microsoft.App/containerApps@20
 }
 
 
-resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: BMSDUserInfoAccessorServiceContainerAppName
   tags: tags
   location: location
@@ -476,7 +476,7 @@ resource BMSDUserInfoAccessorContainerApp 'Microsoft.App/containerApps@2022-03-0
   ]
 }
 
-resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: BMSDLiabilityValidatorEngineServiceContainerAppName
   tags: tags
   location: location
@@ -559,7 +559,7 @@ resource BMSDLiabilityValidatorEngineContainerApp 'Microsoft.App/containerApps@2
 }
 
 
-resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: BMSDNotificationManagerServiceContainerAppName
   tags: tags
   location: location
@@ -659,7 +659,7 @@ resource BMSDNotificationManagerContainerApp 'Microsoft.App/containerApps@2022-0
  }
 
 
-resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
+resource BMSDAccountManagerContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: BMSDAccountManagerServiceContainerAppName
   tags: tags
   location: location

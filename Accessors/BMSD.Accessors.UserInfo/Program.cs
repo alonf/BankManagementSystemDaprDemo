@@ -189,7 +189,7 @@ namespace BMSD.Accessors.UserInfo
                 {
                     logger.LogInformation("GetAccountIdByEmail HTTP processed a request.");
 
-                    string? email = httpContext?.Request?.Query["email"];
+                    string? email = httpContext.Request.Query["email"];
 
                     if (string.IsNullOrEmpty(email))
                     {
@@ -299,7 +299,7 @@ namespace BMSD.Accessors.UserInfo
                 ["accountId"] = accountId
             };
 
-            //use Dapr to enque the message
+            //use Dapr to enqueue the message
             await daprClient.InvokeBindingAsync("clientresponsequeue", "create", responseMessage);
         }
     }

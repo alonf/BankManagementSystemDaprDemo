@@ -4,7 +4,7 @@ param uamiId string
 param keyvaultName string 
 param signalRConnectionStringSecretName string
 
-resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
+resource signalR 'Microsoft.SignalRService/signalR@2023-02-01' = {
   name: signalRName
   location: location
   sku: {
@@ -81,7 +81,7 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
 
 var key = signalR.listKeys().primaryConnectionString
 
-resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+resource connection_string_secret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
   name: '${keyvaultName}/${signalRConnectionStringSecretName}'
   properties: {
     contentType: 'text/plain'

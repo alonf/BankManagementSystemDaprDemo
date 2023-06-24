@@ -2,53 +2,52 @@
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BMSD.Managers.Notification.Controllers
+namespace BMSD.Managers.Notification.Controllers;
+
+public class NotifyController : Controller
 {
-    public class NotifyController : Controller
+    private readonly DaprClient _daprClient;
+    private readonly ILogger<NotifyController> _logger;
+
+    public NotifyController(DaprClient daprClient, ILogger<NotifyController> logger)
     {
-        private readonly DaprClient _daprClient;
-        private readonly ILogger<NotifyController> _logger;
+        _daprClient = daprClient;
+        _logger = logger;
+    }
 
-        public NotifyController(DaprClient daprClient, ILogger<NotifyController> logger)
+    [HttpPost("/clientresponsequeue")]
+    public async Task<IActionResult> AccountCallbackHandlerAsync([FromBody] AccountCallbackRequest accountCallbackRequest)
+    {
+        try
         {
-            _daprClient = daprClient;
-            _logger = logger;
+            _logger.LogInformation($"Received response: {accountCallbackRequest}");
+            return await PublishMessageToSignalRAsync(accountCallbackRequest);
         }
-
-        [HttpPost("/clientresponsequeue")]
-        public async Task<IActionResult> AccountCallbackHandlerAsync([FromBody] AccountCallbackRequest accountCallbackRequest)
+        catch (Exception ex)
         {
-            try
-            {
-                _logger.LogInformation($"Received response: {accountCallbackRequest}");
-                return await PublishMessageToSignalRAsync(accountCallbackRequest);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"AccountCallbackHandlerAsync: Error: {ex.Message}");
-                if (ex.InnerException != null)
-                    _logger.LogError($"AccountCallbackHandlerAsync: inner exception: {ex.InnerException.Message}");
-            }
-            return Problem(statusCode: StatusCodes.Status500InternalServerError);
+            _logger.LogError($"AccountCallbackHandlerAsync: Error: {ex.Message}");
+            if (ex.InnerException != null)
+                _logger.LogError($"AccountCallbackHandlerAsync: inner exception: {ex.InnerException.Message}");
         }
+        return Problem(statusCode: StatusCodes.Status500InternalServerError);
+    }
         
-        private async Task<IActionResult> PublishMessageToSignalRAsync(AccountCallbackRequest accountCallbackRequest)
+    private async Task<IActionResult> PublishMessageToSignalRAsync(AccountCallbackRequest accountCallbackRequest)
+    {
+        Argument argument = new()
         {
-            Argument argument = new Argument
-            {
-                Sender = "dapr",
-                Text = accountCallbackRequest
-            };
+            Sender = "dapr",
+            Text = accountCallbackRequest
+        };
 
-            SignalRMessage message = new()
-            {
-                UserId = accountCallbackRequest.CallerId,
-                Target = "accountcallback",
-                Arguments = new[] { argument }
-            };
+        SignalRMessage message = new()
+        {
+            UserId = accountCallbackRequest.CallerId,
+            Target = "accountcallback",
+            Arguments = new[] { argument }
+        };
 
-            await _daprClient.InvokeBindingAsync("clientcallback", "create", message);
-            return Ok();
-        }
+        await _daprClient.InvokeBindingAsync("clientcallback", "create", message);
+        return Ok();
     }
 }

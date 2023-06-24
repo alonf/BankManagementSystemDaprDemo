@@ -1,8 +1,7 @@
-﻿namespace BMSD.Managers.Notification.Contracts
+﻿namespace BMSD.Managers.Notification.Contracts;
+
+public class Argument
 {
-    public class Argument
-    {
-        public string? Sender { get; set; }
-        public object? Text { get; set; }
-    }
+    public string? Sender { get; set; }
+    public object? Text { get; set; }
 }

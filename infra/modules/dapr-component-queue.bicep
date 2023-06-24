@@ -7,7 +7,7 @@ param appScope array
 param secretStoreName string
 
 
-resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
+resource daprComponentQueue 'Microsoft.App/managedEnvironments/daprComponents@2022-10-01' = {
   name: '${environmentName}/${queueName}'
   properties: {
     componentType: 'bindings.azure.servicebusqueues'

@@ -1,8 +1,7 @@
-﻿namespace BMSD.Managers.Account.Contracts.Responses
+﻿namespace BMSD.Managers.Account.Contracts.Responses;
+
+internal class BalanceInfo
 {
-    internal class BalanceInfo
-    {
-        public string? AccountId { get; set; }
-        public decimal Balance { get; set; }
-    }
+    public string? AccountId { get; set; }
+    public decimal Balance { get; set; }
 }

@@ -5,7 +5,7 @@ param appScope array
 @secure()
 param secretStoreName string
 
-resource daprComponentSignalR 'Microsoft.App/managedEnvironments/daprComponents@2022-06-01-preview' = {
+resource daprComponentSignalR 'Microsoft.App/managedEnvironments/daprComponents@2022-10-01' = {
   name: '${environmentName}/${signalRName}'
   properties: {
     componentType: 'bindings.azure.signalr'

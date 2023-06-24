@@ -36,7 +36,7 @@ jobs:
             rm ./dapr/components/dapr-secretstore.json
             echo "{\"SignalRConnectionString\": \"${{ secrets.BMSD_SIGNALR_CONNECTION_STRING }}\"}" > ./dapr/components/dapr-secretstore.json
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
           7.0.x
@@ -52,7 +52,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal --configuration Debug Tests/BMSD.Tests.IntegrationTests/BMSD.Tests.IntegrationTests.csproj
     - name: Dump docker logs on failure
       if: failure()
-      uses: jwalton/gh-docker-logs@v1
+      uses: jwalton/gh-docker-logs@v2
     - name: Stop containers
       if: always()
       run: docker compose down

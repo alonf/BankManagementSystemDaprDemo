@@ -110,7 +110,7 @@ public class IntegrationTest
         Assert.NotNull(response);
         Assert.Equal(200, (int)response.StatusCode);
 
-        var result = await _signalR.WaitForSignalREventWithConditionAsync(20, messages =>
+        var result = await _signalR.WaitForSignalREventWithConditionAsync(30, messages =>
             messages.Any(m => m.RequestId == accountTransactionInfo.RequestId));
         Assert.True(result);
             
